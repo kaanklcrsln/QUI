@@ -1,0 +1,22 @@
+[general]
+name=QUI - Quantum User Interfaces
+qgisMinimumVersion=3.28
+qgisMaximumVersion=4.99
+supportsQt6=True
+description=Visual theme editor for the QGIS user interface: click any part of a live QGIS mockup and restyle it.
+about=QUI opens a simplified, clickable mockup of the QGIS interface (menus, toolbars, Layers and Browser panels, status bar, a sample dialog). Select any component and edit its colors, gradients, borders, corner radius, padding and per-state styles (hover, pressed, selected, disabled, checked) with a live preview, plus the global program font. When you are happy, apply the theme to QGIS; a 15-second confirmation reverts automatically if the result is unreadable, and your original look can be restored at any time. Themes are saved as .qui.json and can be exported as regular QGIS UI themes. Styling uses Qt Style Sheets (QSS), so true background blur is not possible. QUI never changes map rendering.
+version=0.1.0
+author=Kaan Kılıçarslan
+email=kaankilicarslanofficial@gmail.com
+repository=https://github.com/kaanklcrsln/QUI
+tracker=https://github.com/kaanklcrsln/QUI/issues
+homepage=https://github.com/kaanklcrsln/QUI
+tags=theme,style,stylesheet,qss,user interface,ui,design,dark mode,accessibility,font
+category=Plugins
+icon=resources/icons/qui.svg
+experimental=True
+deprecated=False
+server=False
+hasProcessingProvider=no
+changelog=
+    0.1.0 - Plugin skeleton: editor window placeholder.
