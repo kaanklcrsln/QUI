@@ -385,7 +385,8 @@ class EditorWindow(QMainWindow):
         if name in themes and not is_qui_export(Path(themes[name])):
             QMessageBox.warning(self, title, self.tr("“%1” is taken by another theme.").replace("%1", name))
             return None
-        themes_dir = themes_dir or Path(QgsApplication.qgisSettingsDirPath()) / "themes"
+        # Ask QGIS where it looks for user themes; the location differs between QGIS versions.
+        themes_dir = themes_dir or Path(QgsApplication.userThemesFolder())
         folder = themes_dir / qgis_theme_folder_name(name)
         base_dir = themes.get(self.theme.base_ui_theme) or None
         try:
