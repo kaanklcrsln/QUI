@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from qgis.PyQt.QtCore import QEvent, QPoint, QPointF, QRectF, QSizeF, Qt
-from qgis.PyQt.QtGui import QBrush, QColor, QPainter, QPen, QTransform
+from qgis.PyQt.QtGui import QBrush, QColor, QFont, QPainter, QPen, QTransform
 from qgis.PyQt.QtWidgets import (
     QComboBox,
     QGraphicsRectItem,
@@ -47,6 +47,7 @@ class PreviewPane(QWidget):
         self.current = "main_window"
         self.picker = Picker(self.mockups.values(), self)
         self._highlighted: Component | None = None
+        self._font_key: str | None = None
         self._highlight_items: list[QGraphicsRectItem] = []
 
         layout = QVBoxLayout(self)
@@ -84,10 +85,23 @@ class PreviewPane(QWidget):
         dark.toggled.connect(self.set_dark_background)
         return bar
 
-    def set_stylesheet(self, qss: str) -> None:
-        """Apply *qss* to every mockup (never to the editor's own widgets)."""
-        for widget in self.mockups.values():
-            widget.setStyleSheet(qss)
+    def apply_style(self, qss: str, font: QFont) -> None:
+        """Apply *qss* and the global *font* to every mockup (never to the editor's own widgets).
+
+        An empty ``QFont()`` inherits the application font. Polishing under a stylesheet pins
+        each child's font, so a new font only reaches the children after they are unpinned
+        and re-polished. (Hence mockup widgets must not set fonts of their own.)
+        """
+        font_changed = font.key() != self._font_key
+        self._font_key = font.key()
+        for root in self.mockups.values():
+            if font_changed:
+                root.setStyleSheet("")
+                for child in root.findChildren(QWidget):
+                    child.setFont(QFont())  # an unresolved font means "inherit from parent"
+                root.setFont(font)
+            if font_changed or root.styleSheet() != qss:
+                root.setStyleSheet(qss)
 
     def show_view(self, key: str) -> None:
         """Show one mockup ("main_window" or "dialog") and fit it."""
@@ -100,6 +114,10 @@ class PreviewPane(QWidget):
         self.scene.setSceneRect(self.proxies[key].sceneBoundingRect())
         self._auto_fit = True
         self.fit()
+        self.highlight(self._highlighted)
+
+    def refresh_highlight(self) -> None:
+        """Redraw the outline; restyling (padding, borders) can move or resize widgets."""
         self.highlight(self._highlighted)
 
     def matching_widgets(self, key: str, component: Component) -> list[QWidget]:
