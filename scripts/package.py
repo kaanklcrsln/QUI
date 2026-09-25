@@ -88,7 +88,9 @@ def write_plugins_xml(meta: configparser.SectionProxy, zip_name: str) -> None:
         "qgis_maximum_version": meta.get("qgisMaximumVersion", "3.99"),
         "supports_qt6": meta["supportsQt6"],
         "homepage": meta["homepage"],
-        "file_name": zip_name,
+        # QGIS derives the plugin id from file_name up to the first dot, so it must be
+        # "qui.<version>.zip" whatever the downloaded file is called.
+        "file_name": f"{PLUGIN.name}.{version}.zip",
         "icon": f"{raw}/qui/{meta['icon']}",
         "author_name": meta["author"],
         "download_url": f"https://github.com/{REPO}/releases/download/v{version}/{zip_name}",

@@ -8,13 +8,13 @@
     <qgis_maximum_version>4.99</qgis_maximum_version>
     <supports_qt6>True</supports_qt6>
     <homepage>https://github.com/kaanklcrsln/QUI</homepage>
-    <file_name>qui-0.1.0.zip</file_name>
+    <file_name>qui.0.1.0.zip</file_name>
     <icon>https://raw.githubusercontent.com/kaanklcrsln/QUI/main/qui/resources/icons/qui.svg</icon>
     <author_name>Kaan Kılıçarslan</author_name>
     <download_url>https://github.com/kaanklcrsln/QUI/releases/download/v0.1.0/qui-0.1.0.zip</download_url>
     <uploaded_by>Kaan Kılıçarslan</uploaded_by>
-    <create_date>2026-09-25T08:55:51Z</create_date>
-    <update_date>2026-09-25T08:55:51Z</update_date>
+    <create_date>2026-09-25T09:13:09Z</create_date>
+    <update_date>2026-09-25T09:13:09Z</update_date>
     <experimental>True</experimental>
     <deprecated>False</deprecated>
     <tracker>https://github.com/kaanklcrsln/QUI/issues</tracker>
