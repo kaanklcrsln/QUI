@@ -25,9 +25,9 @@ jobs:
       matrix:
         include:
           - name: QGIS 3.40 LTR, Qt5
-            image: qgis/qgis:release-3_40
-          - name: QGIS 4, Qt6
-            image: qgis/qgis:latest
+            image: qgis/qgis:3.40
+          - name: QGIS 4.2, Qt6
+            image: qgis/qgis:4.2
     container: ${{ matrix.image }}
     env:
       QT_QPA_PLATFORM: offscreen
@@ -38,7 +38,18 @@ jobs:
           python3 -m pip install --break-system-packages pytest pytest-qgis pytest-qt \
             || python3 -m pip install pytest pytest-qgis pytest-qt
       - name: Run tests
-        run: python3 -m pytest -q -W ignore::DeprecationWarning
+        shell: bash
+        run: |
+          python3 -c "from qgis.core import Qgis; from qgis.PyQt.QtCore import QT_VERSION_STR; print('QGIS', Qgis.version(), 'Qt', QT_VERSION_STR)"
+          set +e
+          python3 -m pytest -q -rfE -W ignore::DeprecationWarning 2>&1 | tee pytest.log
+          status=${PIPESTATUS[0]}
+          if [ "$status" -ne 0 ]; then
+            # Annotations are readable without signing in, unlike job logs.
+            summary=$(tail -n 60 pytest.log | sed 's/%/%25/g' | awk '{printf "%s%%0A", $0}')
+            echo "::error title=pytest failed (exit $status)::$summary"
+          fi
+          exit "$status"
 
   package:
     runs-on: ubuntu-latest
