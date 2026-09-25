@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install ruff
+      - run: ruff check .
+      - run: ruff format --check .
+
+  test:
+    name: tests (${{ matrix.name }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: QGIS 3.40 LTR, Qt5
+            image: qgis/qgis:release-3_40
+          - name: QGIS 4, Qt6
+            image: qgis/qgis:latest
+    container: ${{ matrix.image }}
+    env:
+      QT_QPA_PLATFORM: offscreen
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install test tools
+        run: |
+          python3 -m pip install --break-system-packages pytest pytest-qgis pytest-qt \
+            || python3 -m pip install pytest pytest-qgis pytest-qt
+      - name: Run tests
+        run: python3 -m pytest -q -W ignore::DeprecationWarning
+
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python scripts/package.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: qui-plugin-zip
+          path: dist/*.zip

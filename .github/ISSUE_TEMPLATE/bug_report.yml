@@ -1,0 +1,45 @@
+name: Bug report
+description: Something in QUI does not work as expected
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        If a theme made QGIS hard to use: **Plugins → QUI → Restore Original QGIS Look** puts the original look back.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What did you do, what did you expect, what happened instead? Screenshots help a lot.
+    validations:
+      required: true
+  - type: input
+    id: qgis
+    attributes:
+      label: QGIS version
+      description: Help → About, e.g. "3.40.3 Bratislava" or "4.0.1"
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: Operating system
+      placeholder: Windows 11 / Ubuntu 24.04 / macOS 15
+    validations:
+      required: true
+  - type: input
+    id: qui
+    attributes:
+      label: QUI version
+      description: Plugins → Manage and Install Plugins → Installed → QUI
+  - type: textarea
+    id: theme
+    attributes:
+      label: Theme file
+      description: If the problem depends on a theme, attach the .qui.json (File → Save As…).
+  - type: textarea
+    id: log
+    attributes:
+      label: Error messages
+      description: Any Python error dialog or the "QUI" tab of View → Panels → Log Messages.
+      render: text

@@ -1,0 +1,36 @@
+name: Release
+
+# Push a tag like v0.2.0 (matching `version=` in qui/metadata.txt) to publish.
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    env:
+      # Optional repository secrets; without them only the GitHub release is made.
+      OSGEO_USERNAME: ${{ secrets.OSGEO_USERNAME }}
+      OSGEO_PASSWORD: ${{ secrets.OSGEO_PASSWORD }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Tag must match metadata version
+        run: |
+          version=$(sed -n 's/^version=//p' qui/metadata.txt)
+          if [ "v$version" != "$GITHUB_REF_NAME" ]; then
+            echo "Tag $GITHUB_REF_NAME does not match metadata version v$version"; exit 1
+          fi
+      - run: python scripts/package.py
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*.zip
+          generate_release_notes: true
+      - name: Upload to plugins.qgis.org
+        if: env.OSGEO_USERNAME != ''
+        run: python scripts/upload_plugin.py dist/qui-*.zip

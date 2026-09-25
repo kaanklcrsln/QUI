@@ -1,0 +1,15 @@
+name: Feature request
+description: A new component, preset, property or idea
+labels: [enhancement]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would you like QUI to do?
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why is it useful?
+      description: For a new stylable part of QGIS, name the panel or dialog and attach a screenshot.
