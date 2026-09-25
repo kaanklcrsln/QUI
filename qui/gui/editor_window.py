@@ -3,12 +3,14 @@
 from __future__ import annotations
 
 from qgis.core import QgsApplication
-from qgis.PyQt.QtCore import Qt
+from qgis.PyQt.QtCore import QCoreApplication, Qt
 from qgis.PyQt.QtWidgets import QLabel, QMainWindow, QSplitter, QWidget
 
 from ..core.qss_generator import generate_qss
+from ..core.selector_registry import COMPONENTS
 from ..core.theme_applier import ui_theme_qss
 from ..core.theme_model import Theme
+from .component_tree import ComponentTree
 from .preview import PreviewPane
 
 
@@ -23,21 +25,36 @@ class EditorWindow(QMainWindow):
 
         # A new theme starts from the UI theme QGIS is currently running.
         self.theme = Theme(base_ui_theme=QgsApplication.themeName())
+        self.selected: str | None = None
+        self.tree = ComponentTree(parent=self)
         self.preview = PreviewPane(self)
+        self.inspector = QLabel(self.tr("Click a part of the mockup or pick a component on the left."), self)
+        self.inspector.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.inspector.setWordWrap(True)
+        self.inspector.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
 
         splitter = QSplitter(Qt.Orientation.Horizontal, self)
-        splitter.addWidget(self._placeholder(self.tr("Component tree")))
+        splitter.addWidget(self.tree)
         splitter.addWidget(self.preview)
-        splitter.addWidget(self._placeholder(self.tr("Inspector")))
+        splitter.addWidget(self.inspector)
         splitter.setStretchFactor(1, 1)
         splitter.setSizes([250, 850, 300])
         self.setCentralWidget(splitter)
+
+        self.tree.component_selected.connect(self.select_component)
+        self.preview.picker.picked.connect(self.select_component)
         self.refresh_preview()
 
-    def _placeholder(self, text: str) -> QLabel:
-        label = QLabel(text, self)
-        label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        return label
+    def select_component(self, component_id: str) -> None:
+        """Select a component everywhere: tree, mockup highlight, inspector."""
+        component = COMPONENTS[component_id]
+        self.selected = component_id
+        self.tree.select(component_id)
+        shown = self.preview.highlight(component)
+        label = QCoreApplication.translate("QuiComponents", component.label)
+        note = "" if shown else "<br><i>" + self.tr("Not visible in the mockup.") + "</i>"
+        selectors = "<br>".join(component.selectors)
+        self.inspector.setText(f"<b>{label}</b><br><code>{selectors}</code>{note}")
 
     def preview_qss(self) -> str:
         """The stylesheet QGIS would get for the current theme, plus the main-window cascade."""

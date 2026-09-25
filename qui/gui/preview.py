@@ -2,10 +2,11 @@
 
 from __future__ import annotations
 
-from qgis.PyQt.QtCore import QEvent, Qt
-from qgis.PyQt.QtGui import QColor, QPainter, QTransform
+from qgis.PyQt.QtCore import QEvent, QPoint, QPointF, QRectF, QSizeF, Qt
+from qgis.PyQt.QtGui import QBrush, QColor, QPainter, QPen, QTransform
 from qgis.PyQt.QtWidgets import (
     QComboBox,
+    QGraphicsRectItem,
     QGraphicsScene,
     QGraphicsView,
     QLabel,
@@ -15,10 +16,13 @@ from qgis.PyQt.QtWidgets import (
     QWidget,
 )
 
+from ..core.selector_registry import Component
 from .mockup import MockMainWindow, MockOptionsDialog
 from .mockup.common import icon
+from .picker import Picker, component_matches
 
 LIGHT_BACKGROUND, DARK_BACKGROUND = "#e9e9ed", "#1e1f22"
+HIGHLIGHT_PEN, HIGHLIGHT_FILL = "#ff2d95", "#33ff2d95"  # loud magenta: unlikely to clash with a theme
 
 
 class PreviewPane(QWidget):
@@ -40,6 +44,10 @@ class PreviewPane(QWidget):
         self.zoom = 1.0
         self._auto_fit = True  # keep fitting on resize until the user zooms manually
         self.view.viewport().installEventFilter(self)
+        self.current = "main_window"
+        self.picker = Picker(self.mockups.values(), self)
+        self._highlighted: Component | None = None
+        self._highlight_items: list[QGraphicsRectItem] = []
 
         layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
@@ -83,11 +91,59 @@ class PreviewPane(QWidget):
 
     def show_view(self, key: str) -> None:
         """Show one mockup ("main_window" or "dialog") and fit it."""
+        self.current = key
         for name, proxy in self.proxies.items():
             proxy.setVisible(name == key)
+        self.view_combo.blockSignals(True)
+        self.view_combo.setCurrentIndex(self.view_combo.findData(key))
+        self.view_combo.blockSignals(False)
         self.scene.setSceneRect(self.proxies[key].sceneBoundingRect())
         self._auto_fit = True
         self.fit()
+        self.highlight(self._highlighted)
+
+    def matching_widgets(self, key: str, component: Component) -> list[QWidget]:
+        """Visible widgets of mockup *key* that *component* styles."""
+        root = self.mockups[key]
+        return [
+            w
+            for w in (root, *root.findChildren(QWidget))
+            if (w is root or w.isVisibleTo(root)) and component_matches(component, w)
+        ]
+
+    def highlight(self, component: Component | None) -> int:
+        """Outline every widget of *component* in the shown mockup; returns how many.
+
+        If the shown mockup has none but the other one does, switch to it.
+        """
+        for item in self._highlight_items:
+            self.scene.removeItem(item)
+        self._highlight_items = []
+        self._highlighted = component
+        if component is None:
+            return 0
+        widgets = self.matching_widgets(self.current, component)
+        if not widgets:
+            other = next(
+                (k for k in self.mockups if k != self.current and self.matching_widgets(k, component)), None
+            )
+            if other is not None:
+                self.show_view(other)  # re-enters highlight() for the new view
+                return len(self._highlight_items)
+        root, proxy = self.mockups[self.current], self.proxies[self.current]
+        pen = QPen(QColor(HIGHLIGHT_PEN), 2)
+        pen.setCosmetic(True)  # constant width at any zoom
+        for widget in widgets:
+            top_left = QPointF(widget.mapTo(root, QPoint(0, 0)) if widget is not root else QPoint(0, 0))
+            item = self.scene.addRect(
+                proxy.mapRectToScene(QRectF(top_left, QSizeF(widget.size()))),
+                pen,
+                QBrush(QColor(HIGHLIGHT_FILL)),
+            )
+            item.setAcceptedMouseButtons(Qt.MouseButton.NoButton)  # clicks go through to the mockup
+            item.setZValue(1)
+            self._highlight_items.append(item)
+        return len(widgets)
 
     def set_zoom(self, factor: float, *, manual: bool = True) -> None:
         self.zoom = min(max(factor, self.MIN_ZOOM), self.MAX_ZOOM)

@@ -10,8 +10,10 @@ components come before the specific ones that refine them.
 
 from __future__ import annotations
 
+import re
 from collections.abc import Mapping
 from dataclasses import dataclass, field
+from functools import cache
 
 DEFAULT_PSEUDO: Mapping[str, str] = {
     "normal": "",
@@ -41,6 +43,34 @@ class Component:
     def pseudo(self, state: str) -> str:
         """QSS pseudo-state suffix used for *state* on this component."""
         return self.pseudo_overrides.get(state, DEFAULT_PSEUDO[state])
+
+
+SelectorPart = tuple[str, str, "str | None"]  # (combinator " " or ">", class, objectName)
+
+
+@cache
+def parse_selector(selector: str) -> tuple[tuple[SelectorPart, ...], str | None]:
+    """Split one selector into compound parts and its sub-control; pseudo-states are dropped.
+
+    ``'A#x > B C::item:hover'`` -> ``(((' ', 'A', 'x'), ('>', 'B', None), (' ', 'C', None)), 'item')``
+    """
+    sub_control = re.search(r"::([\w-]+)", selector)
+    bare = re.sub(r"::?[\w-]+", "", selector)
+    parts, combinator = [], " "
+    for token in re.findall(r">|[^\s>]+", bare):
+        if token == ">":
+            combinator = ">"
+            continue
+        cls, _, name = token.partition("#")
+        parts.append((combinator, cls, name or None))
+        combinator = " "
+    return tuple(parts), sub_control.group(1) if sub_control else None
+
+
+def specificity(selector: str) -> tuple[int, int]:
+    """Simplified QSS specificity: (objectName count, type + sub-control count)."""
+    parts, sub_control = parse_selector(selector)
+    return sum(name is not None for _, _, name in parts), len(parts) + (sub_control is not None)
 
 
 def _both_browsers(suffix: str) -> tuple[str, ...]:

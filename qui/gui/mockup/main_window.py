@@ -20,6 +20,7 @@ from qgis.PyQt.QtWidgets import (
     QWidget,
 )
 
+from ..picker import PICKABLE_PROPERTY
 from .common import add_action, icon
 
 
@@ -203,8 +204,12 @@ class MockMainWindow(QMainWindow):
         message_bar.pushMessage(
             self.tr("QUI"), self.tr("This is a mockup of QGIS."), Qgis.MessageLevel.Info, 0
         )
+        # QUI cannot restyle these (QgsMessageBar sets its own stylesheet; the map is not UI).
+        message_bar.setProperty(PICKABLE_PROPERTY, False)
         layout.addWidget(message_bar)
-        layout.addWidget(MapPlaceholder(central), 1)
+        map_placeholder = MapPlaceholder(central)
+        map_placeholder.setProperty(PICKABLE_PROPERTY, False)
+        layout.addWidget(map_placeholder, 1)
         self.setCentralWidget(central)
 
     # Panels ----------------------------------------------------------------------------
