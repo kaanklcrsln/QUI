@@ -26,6 +26,9 @@ def main() -> int:
     window = EditorWindow()
     window.show()
     code = app.exec()
+    # Widgets must be destroyed while the application still exists; otherwise Python may
+    # free `app` first when main() returns and Qt crashes deleting the window.
+    del window
     app.exitQgis()
     return code
 
