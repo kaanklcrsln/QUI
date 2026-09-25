@@ -1,0 +1,327 @@
+{
+  "schema": 1,
+  "name": "Minimal",
+  "base_ui_theme": "default",
+  "global": {
+    "accent": "#2563eb",
+    "radius": 4,
+    "opacity": 1.0
+  },
+  "font": {},
+  "components": {
+    "label": {
+      "normal": {
+        "color": "#18181b"
+      },
+      "disabled": {
+        "color": "#a1a1aa"
+      }
+    },
+    "input": {
+      "normal": {
+        "background": "#ffffff",
+        "color": "#18181b",
+        "border_color": "#e4e4e7",
+        "border_width": 1,
+        "border_radius": 4,
+        "padding": [
+          3,
+          6,
+          3,
+          6
+        ]
+      },
+      "hover": {
+        "border_color": "#52525b"
+      },
+      "disabled": {
+        "background": "#fafafa",
+        "color": "#a1a1aa"
+      }
+    },
+    "combo": {
+      "normal": {
+        "background": "#ffffff",
+        "color": "#18181b",
+        "border_color": "#e4e4e7",
+        "border_width": 1,
+        "border_radius": 4,
+        "padding": [
+          3,
+          6,
+          3,
+          6
+        ]
+      },
+      "hover": {
+        "border_color": "#52525b"
+      },
+      "disabled": {
+        "background": "#fafafa",
+        "color": "#a1a1aa"
+      }
+    },
+    "button": {
+      "normal": {
+        "background": "#fafafa",
+        "color": "#18181b",
+        "border_color": "#e4e4e7",
+        "border_width": 1,
+        "border_radius": 4,
+        "padding": [
+          4,
+          14,
+          4,
+          14
+        ]
+      },
+      "hover": {
+        "background": "#f4f4f5"
+      },
+      "pressed": {
+        "background": "#e4e4e7"
+      },
+      "checked": {
+        "background": "@accent",
+        "color": "#ffffff"
+      },
+      "disabled": {
+        "color": "#a1a1aa"
+      }
+    },
+    "tab": {
+      "normal": {
+        "background": "#fafafa",
+        "color": "#52525b",
+        "border_width": 0,
+        "padding": [
+          6,
+          14,
+          6,
+          14
+        ]
+      },
+      "hover": {
+        "color": "#18181b"
+      },
+      "selected": {
+        "background": "#ffffff",
+        "color": "@accent"
+      },
+      "disabled": {
+        "color": "#a1a1aa"
+      }
+    },
+    "tab_pane": {
+      "normal": {
+        "background": "#ffffff",
+        "border_color": "#e4e4e7",
+        "border_width": 1
+      }
+    },
+    "scroll_area": {
+      "normal": {
+        "background": "#00000000",
+        "border_width": 0
+      }
+    },
+    "group_box": {
+      "normal": {
+        "color": "#18181b"
+      }
+    },
+    "group_box.title": {
+      "normal": {
+        "color": "#18181b"
+      }
+    },
+    "item_view": {
+      "normal": {
+        "background": "#ffffff",
+        "color": "#18181b",
+        "border_color": "#e4e4e7",
+        "border_width": 1,
+        "border_radius": 4
+      }
+    },
+    "item_view.item": {
+      "hover": {
+        "background": "#f4f4f5"
+      },
+      "selected": {
+        "background": "@accent",
+        "color": "#ffffff"
+      }
+    },
+    "item_view.header": {
+      "normal": {
+        "background": "#f4f4f5",
+        "color": "#52525b",
+        "border_width": 0,
+        "padding": [
+          4,
+          6,
+          4,
+          6
+        ]
+      }
+    },
+    "tooltip": {
+      "normal": {
+        "background": "#ffffff",
+        "color": "#18181b",
+        "border_color": "#e4e4e7",
+        "border_width": 1
+      }
+    },
+    "main_window": {
+      "normal": {
+        "background": "#fafafa"
+      }
+    },
+    "main_window.separator": {
+      "normal": {
+        "background": "#e4e4e7"
+      },
+      "hover": {
+        "background": "@accent"
+      }
+    },
+    "menubar": {
+      "normal": {
+        "background": "#fafafa",
+        "border_width": 0
+      }
+    },
+    "menubar.item": {
+      "normal": {
+        "background": "#00000000",
+        "color": "#18181b",
+        "padding": [
+          4,
+          10,
+          4,
+          10
+        ]
+      },
+      "hover": {
+        "background": "#f4f4f5"
+      },
+      "pressed": {
+        "background": "@accent",
+        "color": "#ffffff"
+      },
+      "disabled": {
+        "color": "#a1a1aa"
+      }
+    },
+    "menu": {
+      "normal": {
+        "background": "#ffffff",
+        "color": "#18181b",
+        "border_color": "#e4e4e7",
+        "border_width": 1
+      }
+    },
+    "menu.item": {
+      "normal": {
+        "background": "#00000000",
+        "color": "#18181b"
+      },
+      "hover": {
+        "background": "@accent",
+        "color": "#ffffff"
+      },
+      "disabled": {
+        "color": "#a1a1aa"
+      }
+    },
+    "toolbar": {
+      "normal": {
+        "background": "#fafafa",
+        "border_width": 0
+      }
+    },
+    "toolbar.button": {
+      "normal": {
+        "background": "#00000000",
+        "border_width": 0,
+        "border_radius": 4,
+        "padding": [
+          3,
+          3,
+          3,
+          3
+        ]
+      },
+      "hover": {
+        "background": "#f4f4f5"
+      },
+      "pressed": {
+        "background": "#e4e4e7"
+      },
+      "checked": {
+        "background": "@accent"
+      }
+    },
+    "dock": {
+      "normal": {
+        "background": "#fafafa",
+        "color": "#18181b"
+      }
+    },
+    "dock.title": {
+      "normal": {
+        "background": "#f4f4f5",
+        "color": "#18181b",
+        "padding": [
+          5,
+          8,
+          5,
+          8
+        ]
+      }
+    },
+    "statusbar": {
+      "normal": {
+        "background": "#fafafa",
+        "color": "#52525b"
+      }
+    },
+    "statusbar.text": {
+      "normal": {
+        "color": "#52525b"
+      }
+    },
+    "dialog": {
+      "normal": {
+        "background": "#fafafa",
+        "color": "#18181b"
+      }
+    },
+    "dialog.page_list": {
+      "normal": {
+        "background": "#ffffff",
+        "color": "#18181b",
+        "border_width": 0
+      }
+    },
+    "dialog.page_list.item": {
+      "normal": {
+        "padding": [
+          6,
+          8,
+          6,
+          8
+        ]
+      },
+      "hover": {
+        "background": "#f4f4f5"
+      },
+      "selected": {
+        "background": "@accent",
+        "color": "#ffffff"
+      }
+    }
+  }
+}

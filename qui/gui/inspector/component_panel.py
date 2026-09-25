@@ -94,6 +94,12 @@ class ComponentPanel(QWidget):
         self._load()
         self.pages.setCurrentIndex(1)
 
+    def set_state(self, state: str) -> None:
+        """Switch to the *state* tab (if the shown component has it)."""
+        for index in range(self.state_bar.count()):
+            if self.state_bar.tabData(index) == state:
+                self.state_bar.setCurrentIndex(index)
+
     def current_state(self) -> str | None:
         index = self.state_bar.currentIndex()
         return self.state_bar.tabData(index) if index >= 0 else None

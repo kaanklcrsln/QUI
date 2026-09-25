@@ -7,11 +7,7 @@ from pathlib import Path
 from qgis.PyQt.QtCore import QCoreApplication
 from qgis.PyQt.QtGui import QIcon
 
-try:  # Qt6 moved QAction to QtGui
-    from qgis.PyQt.QtGui import QAction
-except ImportError:
-    from qgis.PyQt.QtWidgets import QAction
-
+from .compat import QAction
 from .gui.editor_window import EditorWindow
 
 PLUGIN_DIR = Path(__file__).resolve().parent
@@ -43,7 +39,7 @@ class QuiPlugin:
     def unload(self) -> None:
         """Called by QGIS when the plugin is disabled or uninstalled."""
         if self.window is not None:
-            self.window.close()
+            self.window.force_close()  # no "save changes?" prompt while QGIS unloads plugins
             self.window.deleteLater()
             self.window = None
         if self.action is not None:

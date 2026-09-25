@@ -2,20 +2,37 @@
 
 from __future__ import annotations
 
-from qgis.core import QgsApplication
-from qgis.PyQt.QtCore import Qt, QTimer
-from qgis.PyQt.QtGui import QFont
-from qgis.PyQt.QtWidgets import QMainWindow, QSplitter, QWidget
+import copy
+from pathlib import Path
 
+from qgis.core import QgsApplication, QgsSettings
+from qgis.PyQt.QtCore import Qt, QTimer
+from qgis.PyQt.QtGui import QFont, QIcon, QKeySequence
+from qgis.PyQt.QtWidgets import QFileDialog, QMainWindow, QMessageBox, QSplitter, QToolButton, QWidget
+
+from ..compat import QAction, QUndoStack
 from ..core.qss_generator import generate_qss
 from ..core.selector_registry import COMPONENTS
 from ..core.theme_applier import ui_theme_qss
+from ..core.theme_io import FILE_SUFFIX, ThemeFileError, list_presets, load_theme, save_theme, with_suffix
 from ..core.theme_model import Theme
+from .commands import ReplaceTheme, SetGlobalValue, SetStateValue
 from .component_tree import ComponentTree
 from .inspector import Inspector
+from .mockup.common import icon
 from .preview import PreviewPane
 
 REFRESH_DELAY_MS = 40  # coalesce rapid edits (slider drags) into one restyle
+LAST_DIR_KEY = "qui/lastThemeDir"
+
+
+def _add_all(target, actions) -> None:
+    """Add actions to a menu or toolbar; ``None`` adds a separator."""
+    for action in actions:
+        if action is None:
+            target.addSeparator()
+        else:
+            target.addAction(action)
 
 
 class EditorWindow(QMainWindow):
@@ -24,12 +41,14 @@ class EditorWindow(QMainWindow):
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
         self.setObjectName("QuiEditorWindow")
-        self.setWindowTitle(self.tr("QUI - Quantum User Interfaces"))
-        self.resize(1440, 880)
+        self.resize(1440, 900)
 
         # A new theme starts from the UI theme QGIS is currently running.
         self.theme = Theme(base_ui_theme=QgsApplication.themeName())
+        self.file_path: Path | None = None
         self.selected: str | None = None
+        self._force_close = False
+        self.undo_stack = QUndoStack(self)
         self.tree = ComponentTree(parent=self)
         self.preview = PreviewPane(self)
         self.inspector = Inspector(self)
@@ -42,6 +61,7 @@ class EditorWindow(QMainWindow):
         splitter.setStretchFactor(1, 1)
         splitter.setSizes([230, 770, 440])  # inspector wide enough for five state tabs
         self.setCentralWidget(splitter)
+        self._build_actions()
 
         self._refresh_timer = QTimer(self)
         self._refresh_timer.setSingleShot(True)
@@ -53,7 +73,68 @@ class EditorWindow(QMainWindow):
         self.inspector.component_panel.changed.connect(self._component_edited)
         self.inspector.global_panel.changed.connect(self.set_global_value)
         self.inspector.global_panel.spread_radius_requested.connect(self.spread_radius)
+        self.undo_stack.cleanChanged.connect(self._clean_changed)
+        self._update_title()
         self.refresh_preview()
+
+    def _action(self, text: str, slot, icon_name: str = "", shortcut=None) -> QAction:
+        action = QAction(icon(icon_name) if icon_name else QIcon(), text, self)
+        if shortcut is not None:
+            action.setShortcut(shortcut)
+        action.triggered.connect(slot)
+        return action
+
+    def _build_actions(self) -> None:
+        keys = QKeySequence.StandardKey
+        new = self._action(self.tr("New Theme"), self.new_theme, "mActionFileNew", keys.New)
+        # Slots are bound methods, never lambdas capturing self: PyQt holds bound methods
+        # weakly but lambdas strongly, which would keep this window's wrapper alive forever.
+        open_ = self._action(self.tr("Open…"), self._open_clicked, "mActionFileOpen", keys.Open)
+        save = self._action(self.tr("Save"), self.save_theme, "mActionFileSave", keys.Save)
+        save_as = self._action(self.tr("Save As…"), self._save_as_clicked, "mActionFileSaveAs", keys.SaveAs)
+        export_qss = self._action(self.tr("Export Stylesheet (.qss)…"), self._export_clicked)
+        close = self._action(self.tr("Close"), self.close, shortcut=keys.Close)
+        undo = self.undo_stack.createUndoAction(self, self.tr("Undo"))
+        undo.setIcon(icon("mActionUndo"))
+        undo.setShortcut(keys.Undo)
+        redo = self.undo_stack.createRedoAction(self, self.tr("Redo"))
+        redo.setIcon(icon("mActionRedo"))
+        redo.setShortcut(keys.Redo)
+
+        file_menu = self.menuBar().addMenu(self.tr("&File"))
+        _add_all(file_menu, (new, open_, None, save, save_as, export_qss, None, close))
+        edit_menu = self.menuBar().addMenu(self.tr("&Edit"))
+        edit_menu.addAction(undo)
+        edit_menu.addAction(redo)
+        self.presets_menu = self.menuBar().addMenu(self.tr("&Presets"))
+        for name, path in list_presets().items():
+            self.presets_menu.addAction(name).setData(str(path))
+        self.presets_menu.triggered.connect(self._preset_clicked)
+
+        toolbar = self.addToolBar(self.tr("Theme"))
+        toolbar.setObjectName("quiThemeToolbar")
+        _add_all(toolbar, (new, open_, save, None, undo, redo))
+        presets_button = QToolButton(toolbar)
+        presets_button.setText(self.tr("Presets"))
+        presets_button.setMenu(self.presets_menu)
+        presets_button.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
+        toolbar.addSeparator()
+        toolbar.addWidget(presets_button)
+
+    def _open_clicked(self) -> None:
+        self.open_theme()
+
+    def _save_as_clicked(self) -> None:
+        self.save_theme_as()
+
+    def _export_clicked(self) -> None:
+        self.export_qss()
+
+    def _preset_clicked(self, action: QAction) -> None:
+        self.apply_preset(Path(action.data()))
+
+    def _clean_changed(self, clean: bool) -> None:
+        self.setWindowModified(not clean)
 
     # Selection ------------------------------------------------------------------------
 
@@ -68,15 +149,40 @@ class EditorWindow(QMainWindow):
             component, self.theme.component(component_id), self.theme.global_style.accent, visible
         )
 
-    # Edits (single entry points; undo/redo wraps these) -------------------------------
+    # Edits: public methods push undo commands; apply_* do the change -----------------
 
     def set_state_value(self, component_id: str, state: str, field: str, value) -> None:
-        """Set one property of one component state (``None`` = not set)."""
+        """Set one property of one component state (``None`` = not set), undoably."""
+        old = getattr(self.theme.component(component_id).state(state), field)
+        if old == value:
+            return
+        label = self.inspector.component_panel.fields[field].check.text()
+        self.undo_stack.push(SetStateValue(self, (component_id, state, field), old, value, label))
+
+    def apply_state_value(
+        self, component_id: str, state: str, field: str, value, reveal: bool = False
+    ) -> None:
         setattr(self.theme.component(component_id).state(state), field, value)
+        if reveal:  # undo/redo: show what changed
+            self.select_component(component_id)
+            self.inspector.component_panel.set_state(state)
+            self.inspector.component_panel.reload()
         self.schedule_refresh()
 
     def set_global_value(self, field: str, value) -> None:
-        """Set a theme-wide value; see ``GlobalPanel`` for the field names."""
+        """Set a theme-wide value undoably; see ``GlobalPanel`` for the field names."""
+        old = self._global_value(field)
+        if old != value:
+            self.undo_stack.push(SetGlobalValue(self, (field,), old, value, self.tr("Global setting")))
+
+    def _global_value(self, field: str):
+        if field == "base_ui_theme":
+            return self.theme.base_ui_theme
+        if field in ("font_family", "font_size"):
+            return self.theme.font.family if field == "font_family" else self.theme.font.point_size
+        return getattr(self.theme.global_style, field)
+
+    def apply_global_value(self, field: str, value) -> None:
         if field == "base_ui_theme":
             self.theme.base_ui_theme = value
         elif field == "font_family":
@@ -85,24 +191,153 @@ class EditorWindow(QMainWindow):
             self.theme.font.point_size = value
         else:
             setattr(self.theme.global_style, field, value)
-        if field == "accent":
-            self.inspector.component_panel.set_accent(value)
+        self.inspector.global_panel.load(self.theme)
+        self.inspector.component_panel.set_accent(self.theme.global_style.accent)
         self.schedule_refresh()
 
     def spread_radius(self) -> None:
         """Copy the global radius into every component whose normal state has a background or border."""
+        before = self.theme.to_dict()
         radius = self.theme.global_style.radius
-        for component_id, style in self.theme.components.items():
-            normal = style.states.get("normal")
-            styled = normal is not None and (normal.background is not None or bool(normal.border_width))
+        after = copy.deepcopy(before)
+        for component_id, states in after["components"].items():
+            normal = states.get("normal", {})
+            styled = "background" in normal or normal.get("border_width")
             if styled and component_id in COMPONENTS and COMPONENTS[component_id].selectors:
-                normal.border_radius = radius
-        self.inspector.component_panel.reload()
+                normal["border_radius"] = radius
+        if after != before:
+            self.undo_stack.push(ReplaceTheme(self, before, after, self.tr("Apply corner radius")))
+
+    def apply_preset(self, path: Path) -> None:
+        """Replace the current theme with a bundled preset (undoable)."""
+        try:
+            preset = load_theme(path)
+        except ThemeFileError as error:
+            QMessageBox.warning(self, self.tr("Preset"), str(error))
+            return
+        self.undo_stack.push(ReplaceTheme(self, self.theme.to_dict(), preset.to_dict(), preset.name))
+
+    def apply_theme_dict(self, data: dict) -> None:
+        self.replace_theme(Theme.from_dict(data))
+
+    def replace_theme(self, theme: Theme) -> None:
+        """Show *theme* everywhere (inspector, preview, title); does not touch the undo stack."""
+        self.theme = theme
+        self.inspector.global_panel.load(theme)
+        if self.selected is not None:
+            self.select_component(self.selected)
+        self._update_title()
         self.schedule_refresh()
 
     def _component_edited(self, state: str, field: str, value) -> None:
         if self.selected is not None:
             self.set_state_value(self.selected, state, field, value)
+
+    # Files ----------------------------------------------------------------------------
+
+    def _dialog_dir(self) -> str:
+        return str(
+            self.file_path.parent if self.file_path else QgsSettings().value(LAST_DIR_KEY, str(Path.home()))
+        )
+
+    def new_theme(self) -> None:
+        if self.maybe_save():
+            self._start_document(Theme(base_ui_theme=QgsApplication.themeName()), None)
+
+    def open_theme(self, path: str | Path | None = None) -> bool:
+        if not self.maybe_save():
+            return False
+        if path is None:
+            path, _ = QFileDialog.getOpenFileName(
+                self,
+                self.tr("Open Theme"),
+                self._dialog_dir(),
+                self.tr("QUI themes (*%1)").replace("%1", FILE_SUFFIX),
+            )
+            if not path:
+                return False
+        try:
+            theme = load_theme(path)
+        except ThemeFileError as error:
+            QMessageBox.warning(self, self.tr("Open Theme"), str(error))
+            return False
+        self._start_document(theme, Path(path))
+        return True
+
+    def save_theme(self) -> bool:
+        return self.save_theme_as(self.file_path) if self.file_path else self.save_theme_as()
+
+    def save_theme_as(self, path: str | Path | None = None) -> bool:
+        if path is None:
+            suggested = str(Path(self._dialog_dir()) / with_suffix(self.theme.name).name)
+            path, _ = QFileDialog.getSaveFileName(
+                self, self.tr("Save Theme"), suggested, self.tr("QUI themes (*%1)").replace("%1", FILE_SUFFIX)
+            )
+            if not path:
+                return False
+        path = with_suffix(path)
+        try:
+            save_theme(self.theme, path)
+        except OSError as error:
+            QMessageBox.warning(self, self.tr("Save Theme"), str(error))
+            return False
+        self.file_path = path
+        QgsSettings().setValue(LAST_DIR_KEY, str(path.parent))
+        self.undo_stack.setClean()
+        self._update_title()
+        return True
+
+    def export_qss(self, path: str | Path | None = None) -> bool:
+        """Write the complete stylesheet QGIS would get (base UI theme + QUI rules)."""
+        if path is None:
+            path, _ = QFileDialog.getSaveFileName(
+                self, self.tr("Export Stylesheet"), self._dialog_dir(), self.tr("Qt stylesheets (*.qss)")
+            )
+            if not path:
+                return False
+        try:
+            Path(path).write_text(
+                generate_qss(self.theme, ui_theme_qss(self.theme.base_ui_theme)), encoding="utf-8"
+            )
+        except OSError as error:
+            QMessageBox.warning(self, self.tr("Export Stylesheet"), str(error))
+            return False
+        return True
+
+    def _start_document(self, theme: Theme, path: Path | None) -> None:
+        self.file_path = path
+        self.undo_stack.clear()
+        self.replace_theme(theme)
+
+    def maybe_save(self) -> bool:
+        """Ask to save unsaved changes; False means the user cancelled."""
+        if self.undo_stack.isClean():
+            return True
+        buttons = QMessageBox.StandardButton
+        answer = QMessageBox.question(
+            self,
+            self.tr("Unsaved Changes"),
+            self.tr("Save the changes to “%1”?").replace("%1", self.theme.name),
+            buttons.Save | buttons.Discard | buttons.Cancel,
+        )
+        if answer == buttons.Save:
+            return self.save_theme()
+        return answer == buttons.Discard
+
+    def force_close(self) -> None:
+        """Close without asking (plugin unload)."""
+        self._force_close = True
+        self.close()
+
+    def closeEvent(self, event) -> None:
+        if self._force_close or self.maybe_save():
+            event.accept()
+        else:
+            event.ignore()
+
+    def _update_title(self) -> None:
+        name = self.file_path.name if self.file_path else self.theme.name
+        self.setWindowTitle(f"{name}[*] — {self.tr('QUI - Quantum User Interfaces')}")
 
     # Preview --------------------------------------------------------------------------
 

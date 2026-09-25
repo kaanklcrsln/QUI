@@ -81,16 +81,25 @@ _COMPONENTS = (
     # Common controls (dialogs, panels, everywhere)
     Component("controls", "Common controls"),
     Component("button", "Push buttons", ("QPushButton",), BUTTON, "controls"),
+    # QSS text color does not inherit, so dark themes must color plain text explicitly.
+    Component("label", "Labels, check boxes and radio buttons", ("QLabel", "QCheckBox", "QRadioButton"),
+              ("normal", "disabled"), "controls"),
     Component("input", "Text and number fields", ("QLineEdit", "QAbstractSpinBox"),
               ("normal", "hover", "disabled"), "controls"),
     Component("combo", "Drop-down lists", ("QComboBox",), ("normal", "hover", "disabled"), "controls"),
     Component("tab", "Tabs", ("QTabBar::tab",), ("normal", "hover", "selected", "disabled"), "controls"),
+    Component("tab_pane", "Tab page frame", ("QTabWidget::pane",), BOX, "tab"),
+    # QScrollArea.setWidget() turns on palette fill for the contents, so it needs its own rule.
+    Component("scroll_area", "Scroll areas",
+              ("QScrollArea", "QScrollArea > QWidget#qt_scrollarea_viewport > QWidget"), BOX, "controls"),
     Component("group_box", "Group boxes", ("QGroupBox",), ("normal", "disabled"), "controls"),
     Component("group_box.title", "Group box titles", ("QGroupBox::title",), ("normal", "disabled"),
               "group_box"),
     Component("item_view", "Lists, trees and tables", ("QAbstractItemView",), ("normal", "disabled"),
               "controls"),
     Component("item_view.item", "List items", ("QAbstractItemView::item",), ITEM, "item_view"),
+    Component("item_view.header", "Table headers", ("QHeaderView::section", "QTableCornerButton::section"),
+              ("normal", "hover"), "item_view"),
     Component("tooltip", "Tooltips", ("QToolTip",), BOX, "controls"),
     # Main window
     Component("main_window", "Main window", ("QMainWindow#QgisApp",)),

@@ -1,0 +1,327 @@
+{
+  "schema": 1,
+  "name": "High Contrast",
+  "base_ui_theme": "default",
+  "global": {
+    "accent": "#ffd400",
+    "radius": 0,
+    "opacity": 1.0
+  },
+  "font": {},
+  "components": {
+    "label": {
+      "normal": {
+        "color": "#ffffff"
+      },
+      "disabled": {
+        "color": "#a0a0a0"
+      }
+    },
+    "input": {
+      "normal": {
+        "background": "#000000",
+        "color": "#ffffff",
+        "border_color": "#ffffff",
+        "border_width": 2,
+        "border_radius": 0,
+        "padding": [
+          3,
+          6,
+          3,
+          6
+        ]
+      },
+      "hover": {
+        "border_color": "#ffffff"
+      },
+      "disabled": {
+        "background": "#000000",
+        "color": "#a0a0a0"
+      }
+    },
+    "combo": {
+      "normal": {
+        "background": "#000000",
+        "color": "#ffffff",
+        "border_color": "#ffffff",
+        "border_width": 2,
+        "border_radius": 0,
+        "padding": [
+          3,
+          6,
+          3,
+          6
+        ]
+      },
+      "hover": {
+        "border_color": "#ffffff"
+      },
+      "disabled": {
+        "background": "#000000",
+        "color": "#a0a0a0"
+      }
+    },
+    "button": {
+      "normal": {
+        "background": "#000000",
+        "color": "#ffffff",
+        "border_color": "#ffffff",
+        "border_width": 2,
+        "border_radius": 0,
+        "padding": [
+          4,
+          14,
+          4,
+          14
+        ]
+      },
+      "hover": {
+        "background": "#333333"
+      },
+      "pressed": {
+        "background": "#555555"
+      },
+      "checked": {
+        "background": "@accent",
+        "color": "#000000"
+      },
+      "disabled": {
+        "color": "#a0a0a0"
+      }
+    },
+    "tab": {
+      "normal": {
+        "background": "#000000",
+        "color": "#ffffff",
+        "border_width": 0,
+        "padding": [
+          6,
+          14,
+          6,
+          14
+        ]
+      },
+      "hover": {
+        "color": "#ffffff"
+      },
+      "selected": {
+        "background": "#000000",
+        "color": "@accent"
+      },
+      "disabled": {
+        "color": "#a0a0a0"
+      }
+    },
+    "tab_pane": {
+      "normal": {
+        "background": "#000000",
+        "border_color": "#ffffff",
+        "border_width": 2
+      }
+    },
+    "scroll_area": {
+      "normal": {
+        "background": "#00000000",
+        "border_width": 0
+      }
+    },
+    "group_box": {
+      "normal": {
+        "color": "#ffffff"
+      }
+    },
+    "group_box.title": {
+      "normal": {
+        "color": "#ffffff"
+      }
+    },
+    "item_view": {
+      "normal": {
+        "background": "#000000",
+        "color": "#ffffff",
+        "border_color": "#ffffff",
+        "border_width": 2,
+        "border_radius": 0
+      }
+    },
+    "item_view.item": {
+      "hover": {
+        "background": "#333333"
+      },
+      "selected": {
+        "background": "@accent",
+        "color": "#000000"
+      }
+    },
+    "item_view.header": {
+      "normal": {
+        "background": "#000000",
+        "color": "#ffffff",
+        "border_width": 0,
+        "padding": [
+          4,
+          6,
+          4,
+          6
+        ]
+      }
+    },
+    "tooltip": {
+      "normal": {
+        "background": "#000000",
+        "color": "#ffffff",
+        "border_color": "#ffffff",
+        "border_width": 2
+      }
+    },
+    "main_window": {
+      "normal": {
+        "background": "#000000"
+      }
+    },
+    "main_window.separator": {
+      "normal": {
+        "background": "#ffffff"
+      },
+      "hover": {
+        "background": "@accent"
+      }
+    },
+    "menubar": {
+      "normal": {
+        "background": "#000000",
+        "border_width": 0
+      }
+    },
+    "menubar.item": {
+      "normal": {
+        "background": "#00000000",
+        "color": "#ffffff",
+        "padding": [
+          4,
+          10,
+          4,
+          10
+        ]
+      },
+      "hover": {
+        "background": "#333333"
+      },
+      "pressed": {
+        "background": "@accent",
+        "color": "#000000"
+      },
+      "disabled": {
+        "color": "#a0a0a0"
+      }
+    },
+    "menu": {
+      "normal": {
+        "background": "#000000",
+        "color": "#ffffff",
+        "border_color": "#ffffff",
+        "border_width": 2
+      }
+    },
+    "menu.item": {
+      "normal": {
+        "background": "#00000000",
+        "color": "#ffffff"
+      },
+      "hover": {
+        "background": "@accent",
+        "color": "#000000"
+      },
+      "disabled": {
+        "color": "#a0a0a0"
+      }
+    },
+    "toolbar": {
+      "normal": {
+        "background": "#000000",
+        "border_width": 0
+      }
+    },
+    "toolbar.button": {
+      "normal": {
+        "background": "#00000000",
+        "border_width": 0,
+        "border_radius": 0,
+        "padding": [
+          3,
+          3,
+          3,
+          3
+        ]
+      },
+      "hover": {
+        "background": "#333333"
+      },
+      "pressed": {
+        "background": "#555555"
+      },
+      "checked": {
+        "background": "@accent"
+      }
+    },
+    "dock": {
+      "normal": {
+        "background": "#000000",
+        "color": "#ffffff"
+      }
+    },
+    "dock.title": {
+      "normal": {
+        "background": "#000000",
+        "color": "#ffffff",
+        "padding": [
+          5,
+          8,
+          5,
+          8
+        ]
+      }
+    },
+    "statusbar": {
+      "normal": {
+        "background": "#000000",
+        "color": "#ffffff"
+      }
+    },
+    "statusbar.text": {
+      "normal": {
+        "color": "#ffffff"
+      }
+    },
+    "dialog": {
+      "normal": {
+        "background": "#000000",
+        "color": "#ffffff"
+      }
+    },
+    "dialog.page_list": {
+      "normal": {
+        "background": "#000000",
+        "color": "#ffffff",
+        "border_width": 0
+      }
+    },
+    "dialog.page_list.item": {
+      "normal": {
+        "padding": [
+          6,
+          8,
+          6,
+          8
+        ]
+      },
+      "hover": {
+        "background": "#333333"
+      },
+      "selected": {
+        "background": "@accent",
+        "color": "#000000"
+      }
+    }
+  }
+}

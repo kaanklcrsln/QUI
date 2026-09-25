@@ -5,7 +5,17 @@ from __future__ import annotations
 from collections.abc import Iterable, Mapping
 
 from qgis.PyQt.QtCore import QEvent, QObject, QPoint, Qt, pyqtSignal
-from qgis.PyQt.QtWidgets import QAbstractItemView, QDockWidget, QGroupBox, QMenu, QMenuBar, QTabBar, QWidget
+from qgis.PyQt.QtWidgets import (
+    QAbstractItemView,
+    QDockWidget,
+    QGroupBox,
+    QHeaderView,
+    QMenu,
+    QMenuBar,
+    QTabBar,
+    QTabWidget,
+    QWidget,
+)
 
 from ..core.selector_registry import COMPONENTS, Component, SelectorPart, parse_selector, specificity
 
@@ -52,6 +62,10 @@ def hits_sub_control(widget: QWidget, pos: QPoint, sub_control: str) -> bool:
         return action is not None and action.isSeparator() == (sub_control == "separator")
     if sub_control == "item" and isinstance(widget, QAbstractItemView):
         return widget.indexAt(widget.viewport().mapFrom(widget, pos)).isValid()
+    if sub_control == "section" and isinstance(widget, QHeaderView):
+        return widget.logicalIndexAt(pos) >= 0
+    if sub_control == "pane" and isinstance(widget, QTabWidget):
+        return not widget.tabBar().geometry().contains(pos)
     if sub_control == "tab" and isinstance(widget, QTabBar):
         return widget.tabAt(pos) >= 0
     if sub_control == "title" and isinstance(widget, QDockWidget):
