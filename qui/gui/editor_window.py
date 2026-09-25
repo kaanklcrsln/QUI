@@ -132,7 +132,7 @@ class EditorWindow(QMainWindow):
         edit_menu.addAction(undo)
         edit_menu.addAction(redo)
         apply = self._action(self.tr("Apply to QGIS"), self.apply_to_qgis)
-        apply.setIcon(QIcon(str(Path(__file__).resolve().parents[1] / "resources" / "icons" / "qui.svg")))
+        apply.setIcon(QIcon(str(Path(__file__).resolve().parents[1] / "resources" / "icons" / "qui.png")))
         apply.setShortcut(QKeySequence("Ctrl+Return"))
         restore = self._action(self.tr("Restore Original QGIS Look"), self.restore_qgis_look)
         self.auto_apply_action = QAction(self.tr("Re-apply Kept Theme When QGIS Starts"), self)

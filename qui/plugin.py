@@ -13,7 +13,7 @@ from .core.theme_applier import ThemeApplier, stored_theme
 from .gui.editor_window import EditorWindow
 
 PLUGIN_DIR = Path(__file__).resolve().parent
-ICON_PATH = PLUGIN_DIR / "resources" / "icons" / "qui.svg"
+ICON_PATH = PLUGIN_DIR / "resources" / "icons" / "qui.png"
 
 
 class QuiPlugin:
