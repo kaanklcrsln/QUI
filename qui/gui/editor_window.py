@@ -8,13 +8,32 @@ from pathlib import Path
 from qgis.core import QgsApplication, QgsSettings
 from qgis.PyQt.QtCore import Qt, QTimer
 from qgis.PyQt.QtGui import QFont, QIcon, QKeySequence
-from qgis.PyQt.QtWidgets import QFileDialog, QMainWindow, QMessageBox, QSplitter, QToolButton, QWidget
+from qgis.PyQt.QtWidgets import (
+    QFileDialog,
+    QInputDialog,
+    QMainWindow,
+    QMessageBox,
+    QSplitter,
+    QToolButton,
+    QWidget,
+)
 
 from ..compat import QAction, QUndoStack
+from ..core.contrast import text_contrast
 from ..core.qss_generator import generate_qss
 from ..core.selector_registry import COMPONENTS
 from ..core.theme_applier import AUTO_APPLY_KEY, ThemeApplier, ui_theme_qss
-from ..core.theme_io import FILE_SUFFIX, ThemeFileError, list_presets, load_theme, save_theme, with_suffix
+from ..core.theme_io import (
+    FILE_SUFFIX,
+    ThemeFileError,
+    export_qgis_theme,
+    is_qui_export,
+    list_presets,
+    load_theme,
+    qgis_theme_folder_name,
+    save_theme,
+    with_suffix,
+)
 from ..core.theme_model import Theme
 from .commands import ReplaceTheme, SetGlobalValue, SetStateValue
 from .component_tree import ComponentTree
@@ -75,6 +94,7 @@ class EditorWindow(QMainWindow):
         self.tree.component_selected.connect(self.select_component)
         self.preview.picker.picked.connect(self.select_component)
         self.inspector.component_panel.changed.connect(self._component_edited)
+        self.inspector.component_panel.state_changed.connect(self._update_contrast)
         self.inspector.global_panel.changed.connect(self.set_global_value)
         self.inspector.global_panel.spread_radius_requested.connect(self.spread_radius)
         self.undo_stack.cleanChanged.connect(self._clean_changed)
@@ -97,6 +117,7 @@ class EditorWindow(QMainWindow):
         save = self._action(self.tr("Save"), self.save_theme, "mActionFileSave", keys.Save)
         save_as = self._action(self.tr("Save As…"), self._save_as_clicked, "mActionFileSaveAs", keys.SaveAs)
         export_qss = self._action(self.tr("Export Stylesheet (.qss)…"), self._export_clicked)
+        export_theme = self._action(self.tr("Export as QGIS Theme…"), self._export_theme_clicked)
         close = self._action(self.tr("Close"), self.close, shortcut=keys.Close)
         undo = self.undo_stack.createUndoAction(self, self.tr("Undo"))
         undo.setIcon(icon("mActionUndo"))
@@ -106,7 +127,7 @@ class EditorWindow(QMainWindow):
         redo.setShortcut(keys.Redo)
 
         file_menu = self.menuBar().addMenu(self.tr("&File"))
-        _add_all(file_menu, (new, open_, None, save, save_as, export_qss, None, close))
+        _add_all(file_menu, (new, open_, None, save, save_as, None, export_theme, export_qss, None, close))
         edit_menu = self.menuBar().addMenu(self.tr("&Edit"))
         edit_menu.addAction(undo)
         edit_menu.addAction(redo)
@@ -148,6 +169,9 @@ class EditorWindow(QMainWindow):
     def _export_clicked(self) -> None:
         self.export_qss()
 
+    def _export_theme_clicked(self) -> None:
+        self.export_qgis_theme()
+
     def _preset_clicked(self, action: QAction) -> None:
         self.apply_preset(Path(action.data()))
 
@@ -188,6 +212,12 @@ class EditorWindow(QMainWindow):
         self.inspector.component_panel.show_component(
             component, self.theme.component(component_id), self.theme.global_style.accent, visible
         )
+        self._update_contrast()
+
+    def _update_contrast(self) -> None:
+        if self.selected is not None:
+            panel = self.inspector.component_panel
+            panel.show_contrast(text_contrast(self.theme, self.selected, panel.current_state()))
 
     # Edits: public methods push undo commands; apply_* do the change -----------------
 
@@ -344,6 +374,37 @@ class EditorWindow(QMainWindow):
             return False
         return True
 
+    def export_qgis_theme(self, name: str | None = None, themes_dir: Path | None = None) -> Path | None:
+        """Export as a QGIS UI theme in the profile, selectable in Options without QUI."""
+        title = self.tr("Export as QGIS Theme")
+        if name is None:
+            name, ok = QInputDialog.getText(self, title, self.tr("Theme name:"), text=self.theme.name)
+            if not ok or not name.strip():
+                return None
+        themes = QgsApplication.uiThemes()
+        if name in themes and not is_qui_export(Path(themes[name])):
+            QMessageBox.warning(self, title, self.tr("“%1” is taken by another theme.").replace("%1", name))
+            return None
+        themes_dir = themes_dir or Path(QgsApplication.qgisSettingsDirPath()) / "themes"
+        folder = themes_dir / qgis_theme_folder_name(name)
+        base_dir = themes.get(self.theme.base_ui_theme) or None
+        try:
+            export_qgis_theme(self.theme, folder, base_dir)
+        except (OSError, ThemeFileError) as error:
+            QMessageBox.warning(self, title, str(error))
+            return None
+        QMessageBox.information(
+            self,
+            title,
+            self.tr(
+                "Exported to %1.\n\nChoose “%2” in Settings → Options → General → UI Theme. "
+                "The program font is not part of QGIS themes."
+            )
+            .replace("%1", str(folder))
+            .replace("%2", folder.name),
+        )
+        return folder
+
     def _start_document(self, theme: Theme, path: Path | None) -> None:
         self.file_path = path
         self.undo_stack.clear()
@@ -382,7 +443,9 @@ class EditorWindow(QMainWindow):
     # Preview --------------------------------------------------------------------------
 
     def schedule_refresh(self) -> None:
+        """Every theme change ends here: restyle the preview soon, update contrast now."""
         self._refresh_timer.start()
+        self._update_contrast()
 
     def preview_qss(self) -> str:
         """The stylesheet QGIS would get for the current theme, plus the main-window cascade."""

@@ -7,15 +7,19 @@ from functools import partial
 from qgis.PyQt.QtCore import QCoreApplication, Qt, pyqtSignal
 from qgis.PyQt.QtWidgets import QFormLayout, QLabel, QStackedWidget, QTabBar, QVBoxLayout, QWidget
 
+from ...core.contrast import AA_NORMAL, AAA_NORMAL
 from ...core.selector_registry import Component
 from ...core.theme_model import ComponentStyle
 from .fields import BackgroundField, ColorField, Field, LengthField, PaddingField
+
+GREEN, RED, GRAY = "#1a7f37", "#c62828", "#6b7280"
 
 
 class ComponentPanel(QWidget):
     """Edits one component; emits ``changed(state, field, value)`` for every edit."""
 
     changed = pyqtSignal(str, str, object)
+    state_changed = pyqtSignal()
 
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
@@ -33,6 +37,10 @@ class ComponentPanel(QWidget):
         self.state_bar = QTabBar()
         self.state_bar.setExpanding(False)
         self.state_bar.currentChanged.connect(self._load)
+        self.state_bar.currentChanged.connect(self.state_changed)
+        self.contrast = QLabel()
+        self.contrast.setWordWrap(True)
+        self.contrast.setTextFormat(Qt.TextFormat.RichText)
 
         self.fields: dict[str, Field] = {
             "background": BackgroundField(self.tr("Background"), self),
@@ -51,7 +59,7 @@ class ComponentPanel(QWidget):
 
         editor_page = QWidget()
         layout = QVBoxLayout(editor_page)
-        for widget in (self.title, self.selectors, self.note, self.state_bar):
+        for widget in (self.title, self.selectors, self.note, self.state_bar, self.contrast):
             layout.addWidget(widget)
         layout.addLayout(form)
         layout.addStretch(1)
@@ -93,6 +101,22 @@ class ComponentPanel(QWidget):
         self.set_accent(accent)
         self._load()
         self.pages.setCurrentIndex(1)
+
+    def show_contrast(self, ratio: float | None) -> None:
+        """Show the WCAG text/background contrast of the current state (None = unknown)."""
+        if ratio is None:
+            text = self.tr("Contrast: set a text and a background color to check it.")
+            color = GRAY
+        elif self.current_state() == "disabled":
+            text = self.tr("Contrast %1:1 (disabled controls have no WCAG minimum)")
+            color = GRAY
+        elif ratio >= AAA_NORMAL:
+            text, color = self.tr("Contrast %1:1 — WCAG AAA ✓"), GREEN
+        elif ratio >= AA_NORMAL:
+            text, color = self.tr("Contrast %1:1 — WCAG AA ✓"), GREEN
+        else:
+            text, color = self.tr("⚠ Contrast %1:1 — below WCAG AA (4.5:1), hard to read"), RED
+        self.contrast.setText(f'<span style="color:{color}">{text.replace("%1", f"{ratio or 0:.1f}")}</span>')
 
     def set_state(self, state: str) -> None:
         """Switch to the *state* tab (if the shown component has it)."""

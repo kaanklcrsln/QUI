@@ -3,7 +3,7 @@
   "name": "Glass Light",
   "base_ui_theme": "default",
   "global": {
-    "accent": "#2f6fed",
+    "accent": "#2a63d4",
     "radius": 8,
     "opacity": 1.0
   },

@@ -98,7 +98,7 @@
       },
       "checked": {
         "background": "@accent",
-        "color": "#ffffff"
+        "color": "#0b1020"
       },
       "disabled": {
         "color": "#ffffff4d"
@@ -165,7 +165,7 @@
       },
       "selected": {
         "background": "@accent",
-        "color": "#ffffff"
+        "color": "#0b1020"
       }
     },
     "item_view.header": {
@@ -224,7 +224,7 @@
       },
       "pressed": {
         "background": "@accent",
-        "color": "#ffffff"
+        "color": "#0b1020"
       },
       "disabled": {
         "color": "#ffffff4d"
@@ -245,7 +245,7 @@
       },
       "hover": {
         "background": "@accent",
-        "color": "#ffffff"
+        "color": "#0b1020"
       },
       "disabled": {
         "color": "#ffffff4d"
@@ -350,7 +350,7 @@
       },
       "selected": {
         "background": "@accent",
-        "color": "#ffffff"
+        "color": "#0b1020"
       }
     }
   }

@@ -4,8 +4,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from qgis.core import Qgis, QgsMessageLog
-from qgis.PyQt.QtCore import QCoreApplication, QTimer
+from qgis.core import Qgis, QgsApplication, QgsMessageLog
+from qgis.PyQt.QtCore import QCoreApplication, QTimer, QTranslator
 from qgis.PyQt.QtGui import QIcon
 
 from .compat import QAction
@@ -21,6 +21,16 @@ class QuiPlugin:
 
     def __init__(self, iface) -> None:
         self.iface = iface
+        # Install the translation before any tr() call; QGIS's locale, e.g. "tr" or "pt_BR".
+        self.translator: QTranslator | None = None
+        locale = QgsApplication.locale()
+        for code in (locale, locale[:2]):
+            qm = PLUGIN_DIR / "i18n" / f"qui_{code}.qm"
+            translator = QTranslator()
+            if qm.is_file() and translator.load(str(qm)):
+                self.translator = translator
+                QCoreApplication.installTranslator(translator)
+                break
         self.action: QAction | None = None
         self.restore_action: QAction | None = None
         self.window: EditorWindow | None = None
@@ -63,6 +73,9 @@ class QuiPlugin:
         if self.action is not None:
             self.iface.removeToolBarIcon(self.action)
         self.action = self.restore_action = None
+        if self.translator is not None:
+            QCoreApplication.removeTranslator(self.translator)
+            self.translator = None
 
     def apply_stored_theme(self) -> None:
         """Re-apply the theme the user kept last time (unless auto-apply is off)."""
