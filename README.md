@@ -98,7 +98,12 @@ and Install Plugins → Install from ZIP*.
 |---|---|---|
 | 3.40 LTR, Windows | Qt 5.15 | Tested, including real apply/restore and install from zip |
 | 3.28 – 3.44 | Qt 5.15 | Supported; automated tests run on 3.40 (Linux) in CI |
-| 4.x | Qt 6 | Supported (`supportsQt6=True`); automated tests run in CI |
+| 4.x | Qt 6 | Supported (`supportsQt6=True`). The automated tests pass on QGIS 4.2 in CI. Not yet tried on the QGIS 4 desktop app. |
+
+On QGIS 4, *Export as QGIS Theme* writes the theme to `QgsApplication.userThemesFolder()`.
+In the headless QGIS 4.2 test environment, QGIS lists no user themes at all, not even
+a copy of a built-in one. Whether the desktop app lists them is not verified yet.
+Reports are welcome.
 
 ## Development
 
