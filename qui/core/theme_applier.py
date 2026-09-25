@@ -21,7 +21,7 @@ BUNDLED_THEMES_DIR = Path(__file__).resolve().parents[1] / "themes"
 
 
 def bundled_theme_info() -> list[dict]:
-    """Third-party themes shipped with QUI (see tools/import_themes.py), with attribution."""
+    """Third-party themes shipped with QUI (imported from pinned upstream commits), with attribution."""
     manifest = BUNDLED_THEMES_DIR / "themes.json"
     return json.loads(manifest.read_text(encoding="utf-8")) if manifest.is_file() else []
 

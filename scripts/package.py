@@ -29,7 +29,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import i18n  # noqa: E402
 
 REQUIRED = (
-    "name", "qgisMinimumVersion", "supportsQt6", "description", "about", "version", "author",
+    "name", "qgisMinimumVersion", "qgisMaximumVersion", "description", "about", "version", "author",
     "email", "repository", "tracker", "homepage", "tags", "category", "icon", "experimental", "changelog",
 )  # fmt: skip
 # Allow-list: anything else in qui/ (editor backups, design files...) stays out of the zip.
@@ -88,7 +88,6 @@ def write_plugins_xml(meta: configparser.SectionProxy, zip_name: str) -> None:
         "version": version,
         "qgis_minimum_version": meta["qgisMinimumVersion"],
         "qgis_maximum_version": meta.get("qgisMaximumVersion", "3.99"),
-        "supports_qt6": meta["supportsQt6"],
         "homepage": meta["homepage"],
         # QGIS derives the plugin id from file_name up to the first dot, so it must be
         # "qui.<version>.zip" whatever the downloaded file is called.

@@ -104,7 +104,7 @@ ZIP'ten Kur* seçeneğini kullanın.
 |---|---|---|
 | 3.40 LTR, Windows | Qt 5.15 | Test edildi; gerçek uygula/geri yükle ve zip'ten kurulum dahil |
 | 3.28 – 3.44 | Qt 5.15 | Destekleniyor; otomatik testler CI'da 3.40 (Linux) üzerinde çalışır |
-| 4.x | Qt 6 | Destekleniyor (`supportsQt6=True`). Otomatik testler CI'da QGIS 4.2 üzerinde geçiyor. QGIS 4 masaüstü uygulamasında henüz denenmedi. |
+| 4.x | Qt 6 | Destekleniyor (`qgisMaximumVersion=4.99`). Otomatik testler CI'da QGIS 4.2 üzerinde geçiyor. QGIS 4 masaüstü uygulamasında henüz denenmedi. |
 
 QGIS 4'te *QGIS Teması Olarak Dışa Aktar*, temayı `QgsApplication.userThemesFolder()`
 klasörüne yazar. Başsız (headless) QGIS 4.2 test ortamında QGIS hiçbir kullanıcı

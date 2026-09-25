@@ -6,6 +6,13 @@ project uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.1.2] - 2026-09-25
+
+### Changed
+
+- New logo design, clearly visible on light and dark backgrounds.
+- `metadata.txt` follows the QGIS 4 guidelines: compatibility comes from `qgisMaximumVersion=4.99`, and the deprecated `supportsQt6` flag is removed.
+
 ## [0.1.1] - 2026-09-25
 
 ### Added
@@ -13,7 +20,7 @@ project uses [Semantic Versioning](https://semver.org/).
 - 31 openly licensed community themes, bundled with attribution: QGIS Studio Themes,
   Load QSS, SkinKit (including QDarkStyle, FreeCAD and qmc2 stylesheets) and Tokyo
   Night. They are offered as base themes and in *Presets → Community Themes*.
-  `tools/import_themes.py` re-imports them from pinned upstream commits.
+  They are imported from pinned upstream commits.
 - The designed QUI logo is now the plugin icon.
 
 ## [0.1.0] - 2026-09-25
@@ -40,6 +47,7 @@ project uses [Semantic Versioning](https://semver.org/).
   stylesheet and font. Optionally, the kept theme is re-applied at start-up.
 - English and Turkish user interface.
 
-[Unreleased]: https://github.com/kaanklcrsln/QUI/compare/v0.1.1...HEAD
+[Unreleased]: https://github.com/kaanklcrsln/QUI/compare/v0.1.2...HEAD
+[0.1.2]: https://github.com/kaanklcrsln/QUI/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/kaanklcrsln/QUI/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/kaanklcrsln/QUI/releases/tag/v0.1.0

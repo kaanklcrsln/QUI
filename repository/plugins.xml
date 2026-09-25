@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugins>
-  <pyqgis_plugin name="QUI - Quantum User Interfaces" version="0.1.1">
+  <pyqgis_plugin name="QUI - Quantum User Interfaces" version="0.1.2">
     <description>Visual theme editor for the QGIS user interface: click any part of a live QGIS mockup and restyle it.</description>
     <about>QUI opens a simplified, clickable mockup of the QGIS interface (menus, toolbars, Layers and Browser panels, status bar, a sample dialog). Select any component and edit its colors, gradients, borders, corner radius, padding and per-state styles (hover, pressed, selected, checked, disabled) with a live preview and a WCAG contrast check, plus the global program font. Start from the Glass Dark, Glass Light, Minimal or High Contrast presets, or from one of 31 bundled community themes (credited to their authors). When you are happy, apply the theme to QGIS: a 15-second confirmation reverts automatically if the result is unreadable, and Plugins &gt; QUI &gt; Restore Original QGIS Look brings back the exact original look at any time. Themes are saved as .qui.json and can be exported as regular QGIS UI themes. Available in English and Turkish. Styling uses Qt Style Sheets (QSS), so true background blur is not possible; QUI never changes map rendering or QGIS's own settings.</about>
-    <version>0.1.1</version>
+    <version>0.1.2</version>
     <qgis_minimum_version>3.28</qgis_minimum_version>
     <qgis_maximum_version>4.99</qgis_maximum_version>
-    <supports_qt6>True</supports_qt6>
     <homepage>https://github.com/kaanklcrsln/QUI</homepage>
-    <file_name>qui.0.1.1.zip</file_name>
+    <file_name>qui.0.1.2.zip</file_name>
     <icon>https://raw.githubusercontent.com/kaanklcrsln/QUI/main/qui/resources/icons/qui.png</icon>
     <author_name>Kaan Kılıçarslan</author_name>
-    <download_url>https://github.com/kaanklcrsln/QUI/releases/download/v0.1.1/qui-0.1.1.zip</download_url>
+    <download_url>https://github.com/kaanklcrsln/QUI/releases/download/v0.1.2/qui-0.1.2.zip</download_url>
     <uploaded_by>Kaan Kılıçarslan</uploaded_by>
-    <create_date>2026-09-25T09:59:08Z</create_date>
-    <update_date>2026-09-25T09:59:08Z</update_date>
+    <create_date>2026-09-25T13:01:22Z</create_date>
+    <update_date>2026-09-25T13:01:22Z</update_date>
     <experimental>True</experimental>
     <deprecated>False</deprecated>
     <tracker>https://github.com/kaanklcrsln/QUI/issues</tracker>

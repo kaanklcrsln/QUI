@@ -1,4 +1,4 @@
-/* Minimalist: from Load QSS - UI themes (https://github.com/All4Gis/Load-QSS), GPL-3.0. by Steven Kay. Imported by QUI (tools/import_themes.py): image paths rewritten. */
+/* Minimalist: from Load QSS - UI themes (https://github.com/All4Gis/Load-QSS), GPL-3.0. by Steven Kay. Imported by QUI: image paths rewritten. */
 
 QWidget{border: 0px; background-color: rgba(250, 250, 250, 255); selection-background-color: rgba(0,0,255,75);background-clip: border;outline: 0; }
 QDialog { border-radius: 3px; border: 1px;background-color: rgba(250, 250, 250, 255)}

@@ -2,7 +2,7 @@
 
 Each selector must match both the QUI mockup and real QGIS; private QGIS classes are
 addressed through a public base class plus objectName (``QMainWindow#QgisApp``).
-tests/test_selector_registry.py checks every selector against tools/dumps/*.json.
+Every selector is tested against widget-tree dumps of real QGIS versions.
 
 Registry order is both the component-tree order and the QSS rule order, so generic
 components come before the specific ones that refine them.
