@@ -13,7 +13,7 @@ from typing import Any, Union
 SCHEMA_VERSION = 1
 # Also the QSS rule order: later rules win ties, so "disabled" must come last.
 STATES = ("normal", "hover", "pressed", "selected", "checked", "disabled")
-ACCENT_TOKEN = "@accent"
+ACCENT_REF = "@accent"
 
 _HEX_RE = re.compile(r"#([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})")
 
@@ -34,7 +34,7 @@ def parse_color(value: str) -> tuple[int, int, int, int]:
 
 def _color(value: Any) -> str | None:
     """Validate an optional color field (hex or the accent token)."""
-    if value is not None and value != ACCENT_TOKEN:
+    if value is not None and value != ACCENT_REF:
         parse_color(value)
     return value
 

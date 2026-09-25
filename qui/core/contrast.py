@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from .selector_registry import COMPONENTS
-from .theme_model import ACCENT_TOKEN, Gradient, Theme, parse_color
+from .theme_model import ACCENT_REF, Gradient, Theme, parse_color
 
 AA_NORMAL = 4.5  # WCAG 2.x SC 1.4.3, normal-size text
 AAA_NORMAL = 7.0  # SC 1.4.6
@@ -40,7 +40,7 @@ class _Colors:
         self.theme = theme
 
     def rgba(self, color: str, is_background: bool) -> tuple[int, int, int, int]:
-        r, g, b, a = parse_color(self.theme.global_style.accent if color == ACCENT_TOKEN else color)
+        r, g, b, a = parse_color(self.theme.global_style.accent if color == ACCENT_REF else color)
         if is_background:  # global opacity scales background alpha only
             a = round(a * self.theme.global_style.opacity)
         return r, g, b, a

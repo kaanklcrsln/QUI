@@ -57,11 +57,11 @@ def parse_selector(selector: str) -> tuple[tuple[SelectorPart, ...], str | None]
     sub_control = re.search(r"::([\w-]+)", selector)
     bare = re.sub(r"::?[\w-]+", "", selector)
     parts, combinator = [], " "
-    for token in re.findall(r">|[^\s>]+", bare):
-        if token == ">":
+    for piece in re.findall(r">|[^\s>]+", bare):
+        if piece == ">":
             combinator = ">"
             continue
-        cls, _, name = token.partition("#")
+        cls, _, name = piece.partition("#")
         parts.append((combinator, cls, name or None))
         combinator = " "
     return tuple(parts), sub_control.group(1) if sub_control else None

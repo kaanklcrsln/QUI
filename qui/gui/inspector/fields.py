@@ -17,7 +17,7 @@ from qgis.PyQt.QtWidgets import (
     QWidget,
 )
 
-from ...core.theme_model import ACCENT_TOKEN, Gradient, GradientStop, Padding, parse_color
+from ...core.theme_model import ACCENT_REF, Gradient, GradientStop, Padding, parse_color
 
 
 def to_qcolor(value: str) -> QColor:
@@ -66,12 +66,12 @@ class ColorEditor(QWidget):
         layout.addWidget(self.accent_toggle)
 
     def value(self) -> str:
-        return ACCENT_TOKEN if self.accent_toggle.isChecked() else to_hex(self.button.color())
+        return ACCENT_REF if self.accent_toggle.isChecked() else to_hex(self.button.color())
 
     def set_value(self, value: str) -> None:
         """Show *value* without emitting ``changed``."""
         self.blockSignals(True)
-        linked = value == ACCENT_TOKEN
+        linked = value == ACCENT_REF
         self.accent_toggle.setChecked(linked)
         self._show_color(self._accent if linked else value)
         self.button.setEnabled(not linked)

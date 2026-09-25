@@ -10,7 +10,7 @@ import re
 from collections.abc import Mapping
 
 from .selector_registry import COMPONENTS, Component
-from .theme_model import ACCENT_TOKEN, Background, Gradient, StateStyle, Theme, parse_color
+from .theme_model import ACCENT_REF, Background, Gradient, StateStyle, Theme, parse_color
 
 QUI_MARKER = "/* ---- QUI ---- */"
 
@@ -89,7 +89,7 @@ def declarations(style: StateStyle, accent: str, opacity: float = 1.0) -> list[s
 
 def qss_color(value: str, accent: str, alpha_factor: float = 1.0) -> str:
     """``#rrggbb`` when opaque, else ``rgba(r, g, b, a)`` with a in 0..255 (Qt's convention)."""
-    r, g, b, a = parse_color(accent if value == ACCENT_TOKEN else value)
+    r, g, b, a = parse_color(accent if value == ACCENT_REF else value)
     a = round(a * alpha_factor)
     return f"#{r:02x}{g:02x}{b:02x}" if a == 255 else f"rgba({r}, {g}, {b}, {a})"
 

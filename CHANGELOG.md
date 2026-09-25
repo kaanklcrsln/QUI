@@ -6,6 +6,15 @@ project uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.1.3] - 2026-09-25
+
+### Fixed
+
+- Passes the plugins.qgis.org security scan. Bandit misread two identifiers as hardcoded
+  passwords (false positives), so they are renamed, and the community theme manifest
+  (`themes.json`) pins each source with a `revision` URL instead of a bare commit hash
+  that the secrets scanner flagged.
+
 ## [0.1.2] - 2026-09-25
 
 ### Changed
@@ -47,7 +56,8 @@ project uses [Semantic Versioning](https://semver.org/).
   stylesheet and font. Optionally, the kept theme is re-applied at start-up.
 - English and Turkish user interface.
 
-[Unreleased]: https://github.com/kaanklcrsln/QUI/compare/v0.1.2...HEAD
+[Unreleased]: https://github.com/kaanklcrsln/QUI/compare/v0.1.3...HEAD
+[0.1.3]: https://github.com/kaanklcrsln/QUI/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/kaanklcrsln/QUI/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/kaanklcrsln/QUI/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/kaanklcrsln/QUI/releases/tag/v0.1.0
