@@ -7,7 +7,7 @@ QUI reverts it automatically after 15 seconds.
 
 [Türkçe](README.tr.md) · [Changelog](CHANGELOG.md) · [Releases](https://github.com/kaanklcrsln/QUI/releases)
 
-![QUI](<img width="1920" height="1080" alt="Comp 3_00000" src="https://github.com/user-attachments/assets/c643c04b-77b1-4942-9114-a75a23970b47" />)
+<img width="1920" height="1080" alt="Comp 3_00000" src="https://github.com/user-attachments/assets/c643c04b-77b1-4942-9114-a75a23970b47" />
 
 ## Features
 
