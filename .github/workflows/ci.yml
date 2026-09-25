@@ -37,6 +37,24 @@ jobs:
         run: |
           python3 -m pip install --break-system-packages pytest pytest-qgis pytest-qt \
             || python3 -m pip install pytest pytest-qgis pytest-qt
+      - name: Probe user theme discovery (temporary diagnostic)
+        shell: bash
+        run: |
+          python3 - <<'EOF'
+          from pathlib import Path
+          from qgis.core import QgsApplication
+          app = QgsApplication([], False)
+          app.initQgis()
+          folder = Path(QgsApplication.userThemesFolder())
+          for name in ("ProbeBefore",):
+              (folder / name).mkdir(parents=True, exist_ok=True)
+              (folder / name / "style.qss").write_text("QWidget {}")
+          before = "ProbeBefore" in QgsApplication.uiThemes()
+          (folder / "ProbeAfter").mkdir(parents=True, exist_ok=True)
+          (folder / "ProbeAfter" / "style.qss").write_text("QWidget {}")
+          after = "ProbeAfter" in QgsApplication.uiThemes()
+          print(f"::notice title=uiThemes probe::folder={folder} created-before-first-call listed={before}; created-after listed={after}")
+          EOF
       - name: Run tests
         shell: bash
         run: |
