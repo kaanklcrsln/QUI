@@ -13,17 +13,19 @@ from qgis.PyQt.QtWidgets import QFileDialog, QMainWindow, QMessageBox, QSplitter
 from ..compat import QAction, QUndoStack
 from ..core.qss_generator import generate_qss
 from ..core.selector_registry import COMPONENTS
-from ..core.theme_applier import ui_theme_qss
+from ..core.theme_applier import AUTO_APPLY_KEY, ThemeApplier, ui_theme_qss
 from ..core.theme_io import FILE_SUFFIX, ThemeFileError, list_presets, load_theme, save_theme, with_suffix
 from ..core.theme_model import Theme
 from .commands import ReplaceTheme, SetGlobalValue, SetStateValue
 from .component_tree import ComponentTree
+from .confirm_dialog import ConfirmDialog
 from .inspector import Inspector
 from .mockup.common import icon
 from .preview import PreviewPane
 
 REFRESH_DELAY_MS = 40  # coalesce rapid edits (slider drags) into one restyle
 LAST_DIR_KEY = "qui/lastThemeDir"
+CONFIRM_SECONDS = 15
 
 
 def _add_all(target, actions) -> None:
@@ -38,10 +40,12 @@ def _add_all(target, actions) -> None:
 class EditorWindow(QMainWindow):
     """Top-level editor window, parented to the QGIS main window."""
 
-    def __init__(self, parent: QWidget | None = None) -> None:
+    def __init__(self, parent: QWidget | None = None, applier: ThemeApplier | None = None) -> None:
         super().__init__(parent)
         self.setObjectName("QuiEditorWindow")
         self.resize(1440, 900)
+        # The plugin owns the applier so an applied theme outlives this window.
+        self.applier = applier if applier is not None else ThemeApplier()
 
         # A new theme starts from the UI theme QGIS is currently running.
         self.theme = Theme(base_ui_theme=QgsApplication.themeName())
@@ -106,6 +110,17 @@ class EditorWindow(QMainWindow):
         edit_menu = self.menuBar().addMenu(self.tr("&Edit"))
         edit_menu.addAction(undo)
         edit_menu.addAction(redo)
+        apply = self._action(self.tr("Apply to QGIS"), self.apply_to_qgis)
+        apply.setIcon(QIcon(str(Path(__file__).resolve().parents[1] / "resources" / "icons" / "qui.svg")))
+        apply.setShortcut(QKeySequence("Ctrl+Return"))
+        restore = self._action(self.tr("Restore Original QGIS Look"), self.restore_qgis_look)
+        self.auto_apply_action = QAction(self.tr("Re-apply Kept Theme When QGIS Starts"), self)
+        self.auto_apply_action.setCheckable(True)
+        self.auto_apply_action.setChecked(QgsSettings().value(AUTO_APPLY_KEY, True, type=bool))
+        self.auto_apply_action.toggled.connect(self._auto_apply_toggled)
+        qgis_menu = self.menuBar().addMenu(self.tr("&QGIS"))
+        _add_all(qgis_menu, (apply, restore, None, self.auto_apply_action))
+
         self.presets_menu = self.menuBar().addMenu(self.tr("&Presets"))
         for name, path in list_presets().items():
             self.presets_menu.addAction(name).setData(str(path))
@@ -120,6 +135,9 @@ class EditorWindow(QMainWindow):
         presets_button.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
         toolbar.addSeparator()
         toolbar.addWidget(presets_button)
+        toolbar.addSeparator()
+        toolbar.addAction(apply)
+        toolbar.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
 
     def _open_clicked(self) -> None:
         self.open_theme()
@@ -135,6 +153,28 @@ class EditorWindow(QMainWindow):
 
     def _clean_changed(self, clean: bool) -> None:
         self.setWindowModified(not clean)
+
+    def _auto_apply_toggled(self, enabled: bool) -> None:
+        QgsSettings().setValue(AUTO_APPLY_KEY, enabled)
+
+    # Applying to QGIS -----------------------------------------------------------------
+
+    def apply_to_qgis(self) -> ConfirmDialog:
+        """Apply the theme to the whole application, then ask to keep it (auto-revert)."""
+        self.applier.apply(self.theme)
+        self.confirm_dialog = ConfirmDialog(CONFIRM_SECONDS, self.applier.original_font, self)
+        self.confirm_dialog.finished.connect(self._confirm_finished)
+        self.confirm_dialog.open()
+        return self.confirm_dialog
+
+    def _confirm_finished(self, result: int) -> None:
+        if result == ConfirmDialog.DialogCode.Accepted:
+            self.applier.keep()
+        else:
+            self.applier.revert()
+
+    def restore_qgis_look(self) -> None:
+        self.applier.restore()
 
     # Selection ------------------------------------------------------------------------
 

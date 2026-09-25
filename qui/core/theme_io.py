@@ -22,7 +22,9 @@ def with_suffix(path: str | Path) -> Path:
 
 
 def save_theme(theme: Theme, path: str | Path) -> None:
-    Path(path).write_text(json.dumps(theme.to_dict(), indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    # LF on every platform so theme files diff and share cleanly (write_text(newline=) needs 3.10).
+    with open(path, "w", encoding="utf-8", newline="\n") as file:
+        file.write(json.dumps(theme.to_dict(), indent=2, ensure_ascii=False) + "\n")
 
 
 def load_theme(path: str | Path) -> Theme:
