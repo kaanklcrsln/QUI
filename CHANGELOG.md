@@ -6,6 +6,14 @@ project uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- 31 openly licensed community themes, bundled with attribution: QGIS Studio Themes,
+  Load QSS, SkinKit (including QDarkStyle, FreeCAD and qmc2 stylesheets) and Tokyo
+  Night. They are offered as base themes and in *Presets → Community Themes*.
+  `tools/import_themes.py` re-imports them from pinned upstream commits.
+- The designed QUI logo is now the plugin icon.
+
 ## [0.1.0] - 2026-09-25
 
 ### Added

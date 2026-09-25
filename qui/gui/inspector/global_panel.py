@@ -20,6 +20,7 @@ from qgis.PyQt.QtWidgets import (
     QWidget,
 )
 
+from ...core.theme_applier import bundled_theme_info
 from ...core.theme_model import Theme
 from .fields import Field, row_widget, to_hex, to_qcolor
 
@@ -72,8 +73,13 @@ class GlobalPanel(QWidget):
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
         self.base_theme = QComboBox()
-        themes = sorted(QgsApplication.uiThemes(), key=lambda name: (name != "default", name))
-        self.base_theme.addItems(themes)
+        self.base_theme.addItems(
+            sorted(QgsApplication.uiThemes(), key=lambda name: (name != "default", name))
+        )
+        community = [info["name"] for info in bundled_theme_info()]
+        if community:
+            self.base_theme.insertSeparator(self.base_theme.count())
+            self.base_theme.addItems(community)
         self.base_theme.currentTextChanged.connect(lambda text: self.changed.emit("base_ui_theme", text))
         self.accent = QgsColorButton()
         self.accent.colorChanged.connect(lambda color: self.changed.emit("accent", to_hex(color)))

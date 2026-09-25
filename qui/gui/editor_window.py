@@ -22,7 +22,7 @@ from ..compat import QAction, QUndoStack
 from ..core.contrast import text_contrast
 from ..core.qss_generator import generate_qss
 from ..core.selector_registry import COMPONENTS
-from ..core.theme_applier import AUTO_APPLY_KEY, ThemeApplier, ui_theme_qss
+from ..core.theme_applier import AUTO_APPLY_KEY, ThemeApplier, bundled_theme_info, ui_theme_qss, ui_themes
 from ..core.theme_io import (
     FILE_SUFFIX,
     ThemeFileError,
@@ -144,7 +144,17 @@ class EditorWindow(QMainWindow):
 
         self.presets_menu = self.menuBar().addMenu(self.tr("&Presets"))
         for name, path in list_presets().items():
-            self.presets_menu.addAction(name).setData(str(path))
+            self.presets_menu.addAction(name).setData(f"preset:{path}")
+        community = bundled_theme_info()
+        if community:
+            self.presets_menu.addSeparator()
+            self.community_menu = self.presets_menu.addMenu(self.tr("Community Themes"))
+            for info in community:
+                action = self.community_menu.addAction(info["name"])
+                action.setData(f"base:{info['name']}")
+                action.setToolTip(f"{info['source']} · {info['license']}")
+            self.community_menu.setToolTipsVisible(True)
+        # Submenu actions also reach the parent menu's triggered signal.
         self.presets_menu.triggered.connect(self._preset_clicked)
 
         toolbar = self.addToolBar(self.tr("Theme"))
@@ -173,7 +183,11 @@ class EditorWindow(QMainWindow):
         self.export_qgis_theme()
 
     def _preset_clicked(self, action: QAction) -> None:
-        self.apply_preset(Path(action.data()))
+        kind, _, value = (action.data() or "").partition(":")
+        if kind == "preset":
+            self.apply_preset(Path(value))
+        elif kind == "base":
+            self.apply_community_theme(value)
 
     def _clean_changed(self, clean: bool) -> None:
         self.setWindowModified(not clean)
@@ -287,6 +301,11 @@ class EditorWindow(QMainWindow):
             return
         self.undo_stack.push(ReplaceTheme(self, self.theme.to_dict(), preset.to_dict(), preset.name))
 
+    def apply_community_theme(self, name: str) -> None:
+        """Start a theme on a bundled third-party theme as its base (undoable)."""
+        theme = Theme(name=name, base_ui_theme=name)
+        self.undo_stack.push(ReplaceTheme(self, self.theme.to_dict(), theme.to_dict(), name))
+
     def apply_theme_dict(self, data: dict) -> None:
         self.replace_theme(Theme.from_dict(data))
 
@@ -381,7 +400,7 @@ class EditorWindow(QMainWindow):
             name, ok = QInputDialog.getText(self, title, self.tr("Theme name:"), text=self.theme.name)
             if not ok or not name.strip():
                 return None
-        themes = QgsApplication.uiThemes()
+        themes = ui_themes()  # QGIS's and QUI's bundled themes: both names are taken
         if name in themes and not is_qui_export(Path(themes[name])):
             QMessageBox.warning(self, title, self.tr("“%1” is taken by another theme.").replace("%1", name))
             return None

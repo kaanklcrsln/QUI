@@ -1,0 +1,354 @@
+[
+  {
+    "id": "studio_dark",
+    "name": "Studio Dark",
+    "source": "QGIS Studio Themes",
+    "url": "https://github.com/GallPeters/qgis-studio-themes",
+    "commit": "a5ccec4a04f1f39275cd77191c155298714a7a61",
+    "author": "Jossef Kanter",
+    "origin": "",
+    "license": "GPL-2.0",
+    "missing_images": []
+  },
+  {
+    "id": "studio_light_orange",
+    "name": "Studio Light Orange",
+    "source": "QGIS Studio Themes",
+    "url": "https://github.com/GallPeters/qgis-studio-themes",
+    "commit": "a5ccec4a04f1f39275cd77191c155298714a7a61",
+    "author": "Jossef Kanter",
+    "origin": "",
+    "license": "GPL-2.0",
+    "missing_images": []
+  },
+  {
+    "id": "studio_premium",
+    "name": "Studio Premium",
+    "source": "QGIS Studio Themes",
+    "url": "https://github.com/GallPeters/qgis-studio-themes",
+    "commit": "a5ccec4a04f1f39275cd77191c155298714a7a61",
+    "author": "Jossef Kanter",
+    "origin": "",
+    "license": "GPL-2.0",
+    "missing_images": []
+  },
+  {
+    "id": "studio_pro",
+    "name": "Studio Pro",
+    "source": "QGIS Studio Themes",
+    "url": "https://github.com/GallPeters/qgis-studio-themes",
+    "commit": "a5ccec4a04f1f39275cd77191c155298714a7a61",
+    "author": "Jossef Kanter",
+    "origin": "",
+    "license": "GPL-2.0",
+    "missing_images": []
+  },
+  {
+    "id": "studio_qgis_light",
+    "name": "Studio QGIS Light",
+    "source": "QGIS Studio Themes",
+    "url": "https://github.com/GallPeters/qgis-studio-themes",
+    "commit": "a5ccec4a04f1f39275cd77191c155298714a7a61",
+    "author": "Jossef Kanter",
+    "origin": "",
+    "license": "GPL-2.0",
+    "missing_images": []
+  },
+  {
+    "id": "studio_web",
+    "name": "Studio Web",
+    "source": "QGIS Studio Themes",
+    "url": "https://github.com/GallPeters/qgis-studio-themes",
+    "commit": "a5ccec4a04f1f39275cd77191c155298714a7a61",
+    "author": "Jossef Kanter",
+    "origin": "",
+    "license": "GPL-2.0",
+    "missing_images": []
+  },
+  {
+    "id": "catppuccin_mocha",
+    "name": "Catppuccin Mocha",
+    "source": "Load QSS - UI themes",
+    "url": "https://github.com/All4Gis/Load-QSS",
+    "commit": "2d8d912e5cfa5bc7e5d7a31f0d8aa9e1f35e7552",
+    "author": "Francisco Raga (All4Gis) and contributors",
+    "origin": "",
+    "license": "GPL-3.0",
+    "missing_images": []
+  },
+  {
+    "id": "qdarkstyle",
+    "name": "QDarkStyle",
+    "source": "Load QSS - UI themes",
+    "url": "https://github.com/All4Gis/Load-QSS",
+    "commit": "2d8d912e5cfa5bc7e5d7a31f0d8aa9e1f35e7552",
+    "author": "Francisco Raga (All4Gis) and contributors",
+    "origin": "QDarkStyle by Colin Duquesnoy (LGPL-3.0)",
+    "license": "LGPL-3.0",
+    "missing_images": [
+      "icons/Vsepartoolbars.png"
+    ]
+  },
+  {
+    "id": "dark_orange",
+    "name": "Dark Orange",
+    "source": "Load QSS - UI themes",
+    "url": "https://github.com/All4Gis/Load-QSS",
+    "commit": "2d8d912e5cfa5bc7e5d7a31f0d8aa9e1f35e7552",
+    "author": "Francisco Raga (All4Gis) and contributors",
+    "origin": "",
+    "license": "GPL-3.0",
+    "missing_images": [
+      ":/down_arrow.png",
+      ":/images/checkbox.png",
+      ":/images/handle.png"
+    ]
+  },
+  {
+    "id": "glassmorphism",
+    "name": "Glassmorphism",
+    "source": "Load QSS - UI themes",
+    "url": "https://github.com/All4Gis/Load-QSS",
+    "commit": "2d8d912e5cfa5bc7e5d7a31f0d8aa9e1f35e7552",
+    "author": "Francisco Raga (All4Gis) and contributors",
+    "origin": "",
+    "license": "GPL-3.0",
+    "missing_images": []
+  },
+  {
+    "id": "freecad_light_green",
+    "name": "FreeCAD Light Green",
+    "source": "Load QSS - UI themes",
+    "url": "https://github.com/All4Gis/Load-QSS",
+    "commit": "2d8d912e5cfa5bc7e5d7a31f0d8aa9e1f35e7552",
+    "author": "Francisco Raga (All4Gis) and contributors",
+    "origin": "FreeCAD stylesheet by Pablo Gil Fernández (CC BY-SA 4.0)",
+    "license": "CC-BY-SA-4.0",
+    "missing_images": []
+  },
+  {
+    "id": "material_dark",
+    "name": "Material Dark",
+    "source": "Load QSS - UI themes",
+    "url": "https://github.com/All4Gis/Load-QSS",
+    "commit": "2d8d912e5cfa5bc7e5d7a31f0d8aa9e1f35e7552",
+    "author": "Francisco Raga (All4Gis) and contributors",
+    "origin": "",
+    "license": "GPL-3.0",
+    "missing_images": []
+  },
+  {
+    "id": "midnight_crimson",
+    "name": "Midnight Crimson",
+    "source": "Load QSS - UI themes",
+    "url": "https://github.com/All4Gis/Load-QSS",
+    "commit": "2d8d912e5cfa5bc7e5d7a31f0d8aa9e1f35e7552",
+    "author": "Francisco Raga (All4Gis) and contributors",
+    "origin": "",
+    "license": "GPL-3.0",
+    "missing_images": []
+  },
+  {
+    "id": "minimalist",
+    "name": "Minimalist",
+    "source": "Load QSS - UI themes",
+    "url": "https://github.com/All4Gis/Load-QSS",
+    "commit": "2d8d912e5cfa5bc7e5d7a31f0d8aa9e1f35e7552",
+    "author": "Francisco Raga (All4Gis) and contributors",
+    "origin": "by Steven Kay",
+    "license": "GPL-3.0",
+    "missing_images": []
+  },
+  {
+    "id": "monokai_pro",
+    "name": "Monokai Pro",
+    "source": "Load QSS - UI themes",
+    "url": "https://github.com/All4Gis/Load-QSS",
+    "commit": "2d8d912e5cfa5bc7e5d7a31f0d8aa9e1f35e7552",
+    "author": "Francisco Raga (All4Gis) and contributors",
+    "origin": "",
+    "license": "GPL-3.0",
+    "missing_images": []
+  },
+  {
+    "id": "mosaic_wallpaper",
+    "name": "Mosaic Wallpaper",
+    "source": "Load QSS - UI themes",
+    "url": "https://github.com/All4Gis/Load-QSS",
+    "commit": "2d8d912e5cfa5bc7e5d7a31f0d8aa9e1f35e7552",
+    "author": "Francisco Raga (All4Gis) and contributors",
+    "origin": "",
+    "license": "GPL-3.0",
+    "missing_images": []
+  },
+  {
+    "id": "nord_frost",
+    "name": "Nord Frost",
+    "source": "Load QSS - UI themes",
+    "url": "https://github.com/All4Gis/Load-QSS",
+    "commit": "2d8d912e5cfa5bc7e5d7a31f0d8aa9e1f35e7552",
+    "author": "Francisco Raga (All4Gis) and contributors",
+    "origin": "",
+    "license": "GPL-3.0",
+    "missing_images": []
+  },
+  {
+    "id": "qt_complete",
+    "name": "Qt Complete",
+    "source": "Load QSS - UI themes",
+    "url": "https://github.com/All4Gis/Load-QSS",
+    "commit": "2d8d912e5cfa5bc7e5d7a31f0d8aa9e1f35e7552",
+    "author": "Francisco Raga (All4Gis) and contributors",
+    "origin": "",
+    "license": "GPL-3.0",
+    "missing_images": []
+  },
+  {
+    "id": "vscode_dark",
+    "name": "VSCode Dark",
+    "source": "Load QSS - UI themes",
+    "url": "https://github.com/All4Gis/Load-QSS",
+    "commit": "2d8d912e5cfa5bc7e5d7a31f0d8aa9e1f35e7552",
+    "author": "Francisco Raga (All4Gis) and contributors",
+    "origin": "",
+    "license": "GPL-3.0",
+    "missing_images": []
+  },
+  {
+    "id": "blue_glass",
+    "name": "Blue Glass",
+    "source": "SkinKit",
+    "url": "https://github.com/Wolren/SkinKit",
+    "commit": "0b9f70139d1f077a7e93dca375125bf5a5b6cc4d",
+    "author": "Wolren",
+    "origin": "by Steven Kay, based on his Minimalist theme",
+    "license": "GPL-3.0",
+    "missing_images": []
+  },
+  {
+    "id": "coffee",
+    "name": "Coffee",
+    "source": "SkinKit",
+    "url": "https://github.com/Wolren/SkinKit",
+    "commit": "0b9f70139d1f077a7e93dca375125bf5a5b6cc4d",
+    "author": "Wolren",
+    "origin": "Qt style sheet example by The Qt Company (BSD-3-Clause)",
+    "license": "BSD-3-Clause",
+    "missing_images": []
+  },
+  {
+    "id": "dark_forest",
+    "name": "Dark Forest",
+    "source": "SkinKit",
+    "url": "https://github.com/Wolren/SkinKit",
+    "commit": "0b9f70139d1f077a7e93dca375125bf5a5b6cc4d",
+    "author": "Wolren",
+    "origin": "",
+    "license": "GPL-3.0",
+    "missing_images": []
+  },
+  {
+    "id": "orange_forest",
+    "name": "Orange Forest",
+    "source": "SkinKit",
+    "url": "https://github.com/Wolren/SkinKit",
+    "commit": "0b9f70139d1f077a7e93dca375125bf5a5b6cc4d",
+    "author": "Wolren",
+    "origin": "",
+    "license": "GPL-3.0",
+    "missing_images": []
+  },
+  {
+    "id": "skinkit_light",
+    "name": "SkinKit Light",
+    "source": "SkinKit",
+    "url": "https://github.com/Wolren/SkinKit",
+    "commit": "0b9f70139d1f077a7e93dca375125bf5a5b6cc4d",
+    "author": "Wolren",
+    "origin": "",
+    "license": "GPL-3.0",
+    "missing_images": [
+      ":/images/combo_down_arrow.png",
+      ":/images/scroll_left_arrow.png",
+      ":/images/scroll_right_arrow.png",
+      ":/images/scroll_up_arrow.png"
+    ]
+  },
+  {
+    "id": "machinery",
+    "name": "Machinery",
+    "source": "SkinKit",
+    "url": "https://github.com/Wolren/SkinKit",
+    "commit": "0b9f70139d1f077a7e93dca375125bf5a5b6cc4d",
+    "author": "Wolren",
+    "origin": "qmc2-machinery by René Reucher (QMC2, GPL-2.0)",
+    "license": "GPL-2.0",
+    "missing_images": []
+  },
+  {
+    "id": "freecad_dark_blue",
+    "name": "FreeCAD Dark Blue",
+    "source": "SkinKit",
+    "url": "https://github.com/Wolren/SkinKit",
+    "commit": "0b9f70139d1f077a7e93dca375125bf5a5b6cc4d",
+    "author": "Wolren",
+    "origin": "FreeCAD stylesheet by Pablo Gil Fernández (CC BY-SA 4.0)",
+    "license": "CC-BY-SA-4.0",
+    "missing_images": []
+  },
+  {
+    "id": "freecad_dark_green",
+    "name": "FreeCAD Dark Green",
+    "source": "SkinKit",
+    "url": "https://github.com/Wolren/SkinKit",
+    "commit": "0b9f70139d1f077a7e93dca375125bf5a5b6cc4d",
+    "author": "Wolren",
+    "origin": "FreeCAD stylesheet by Pablo Gil Fernández (CC BY-SA 4.0)",
+    "license": "CC-BY-SA-4.0",
+    "missing_images": []
+  },
+  {
+    "id": "freecad_dark_orange",
+    "name": "FreeCAD Dark Orange",
+    "source": "SkinKit",
+    "url": "https://github.com/Wolren/SkinKit",
+    "commit": "0b9f70139d1f077a7e93dca375125bf5a5b6cc4d",
+    "author": "Wolren",
+    "origin": "FreeCAD stylesheet by Pablo Gil Fernández (CC BY-SA 4.0)",
+    "license": "CC-BY-SA-4.0",
+    "missing_images": []
+  },
+  {
+    "id": "freecad_light_blue",
+    "name": "FreeCAD Light Blue",
+    "source": "SkinKit",
+    "url": "https://github.com/Wolren/SkinKit",
+    "commit": "0b9f70139d1f077a7e93dca375125bf5a5b6cc4d",
+    "author": "Wolren",
+    "origin": "FreeCAD stylesheet by Pablo Gil Fernández (CC BY-SA 4.0)",
+    "license": "CC-BY-SA-4.0",
+    "missing_images": []
+  },
+  {
+    "id": "freecad_light_orange",
+    "name": "FreeCAD Light Orange",
+    "source": "SkinKit",
+    "url": "https://github.com/Wolren/SkinKit",
+    "commit": "0b9f70139d1f077a7e93dca375125bf5a5b6cc4d",
+    "author": "Wolren",
+    "origin": "FreeCAD stylesheet by Pablo Gil Fernández (CC BY-SA 4.0)",
+    "license": "CC-BY-SA-4.0",
+    "missing_images": []
+  },
+  {
+    "id": "tokyo_night",
+    "name": "Tokyo Night",
+    "source": "Tokyo Night Theme",
+    "url": "https://github.com/Monocromatic/qgis-tokyo-night-theme",
+    "commit": "1d069f821e7b86fd7fde694425b3ac8f5d96ddca",
+    "author": "Lucas Mourão",
+    "origin": "",
+    "license": "MIT",
+    "missing_images": []
+  }
+]

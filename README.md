@@ -43,6 +43,10 @@ QUI reverts it automatically after 15 seconds.
   - Optionally re-apply the kept theme when QGIS starts.
 - **Languages:** English and Turkish.
 
+- **31 community themes**, bundled with credit to their authors. Pick one in
+  *Presets → Community Themes* or use it as the base theme in the *Global* tab and
+  restyle it further.
+
 | Glass Light, Options dialog | High Contrast, WCAG indicator |
 |---|---|
 | ![](docs/screenshots/editor-dialog-glass-light.png) | ![](docs/screenshots/editor-high-contrast.png) |
@@ -76,6 +80,33 @@ and Install Plugins → Install from ZIP*.
 4. Use the **Global** tab for the accent, opacity, base theme and program font.
 5. Choose **Apply to QGIS**, then **Keep changes** within 15 seconds.
 6. Save with *File → Save* or export with *File → Export as QGIS Theme…*.
+
+## Community themes
+
+QUI bundles these openly licensed QGIS and Qt stylesheet themes, each converted
+into a regular QGIS theme folder (image paths rewritten) by
+[tools/import_themes.py](tools/import_themes.py). Every theme's source, author and
+license is listed in [qui/themes/themes.json](qui/themes/themes.json). The license
+texts are in [qui/themes/licenses](qui/themes/licenses).
+
+| Source | Author | License | Themes |
+|---|---|---|---|
+| [QGIS Studio Themes](https://github.com/GallPeters/qgis-studio-themes) | Jossef Kanter | GPL-2.0 | Studio Dark, Light Orange, Premium, Pro, QGIS Light, Web |
+| [Load QSS - UI themes](https://github.com/All4Gis/Load-QSS) | Francisco Raga (All4Gis) and contributors | GPL-3.0 | Catppuccin Mocha, Dark Orange, Glassmorphism, Material Dark, Midnight Crimson, Minimalist (Steven Kay), Monokai Pro, Mosaic Wallpaper, Nord Frost, Qt Complete, VSCode Dark |
+| ↳ QDarkStyle | Colin Duquesnoy | LGPL-3.0 | QDarkStyle |
+| ↳ FreeCAD stylesheets | Pablo Gil Fernández | CC BY-SA 4.0 | FreeCAD Light Green |
+| [SkinKit](https://github.com/Wolren/SkinKit) | Wolren | GPL-3.0 | Blue Glass (Steven Kay), Dark Forest, Orange Forest, SkinKit Light |
+| ↳ FreeCAD stylesheets | Pablo Gil Fernández | CC BY-SA 4.0 | FreeCAD Dark Blue, Dark Green, Dark Orange, Light Blue, Light Orange |
+| ↳ qmc2-machinery | René Reucher | GPL-2.0 | Machinery |
+| ↳ Qt style sheet example | The Qt Company | BSD-3-Clause | Coffee |
+| [Tokyo Night Theme](https://github.com/Monocromatic/qgis-tokyo-night-theme) | Lucas Mourão | MIT | Tokyo Night |
+
+Some themes were written for other Qt applications, so not every QGIS widget
+follows them. A few of them (QDarkStyle, Dark Orange, SkinKit Light) refer to
+images from their original applications that QGIS does not have. The manifest
+lists these images.
+
+![All bundled community themes on the QUI mockup](docs/screenshots/community-themes.png)
 
 ## Known limitations
 
@@ -118,4 +149,6 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for adding components, presets and transl
 
 ## License
 
-GPL-2.0-or-later. See [LICENSE](LICENSE).
+QUI's code is GPL-2.0-or-later; see [LICENSE](LICENSE). The bundled community themes
+keep their own licenses, listed above. Because some of them are GPL-3.0, the plugin as
+a whole is distributed under the terms of GPL-3.0, which "or later" allows.

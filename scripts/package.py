@@ -33,7 +33,7 @@ REQUIRED = (
     "email", "repository", "tracker", "homepage", "tags", "category", "icon", "experimental", "changelog",
 )  # fmt: skip
 # Allow-list: anything else in qui/ (editor backups, design files...) stays out of the zip.
-INCLUDED_SUFFIXES = {".py", ".txt", ".json", ".svg", ".png", ".qm", ".qss"}
+INCLUDED_SUFFIXES = {".py", ".txt", ".json", ".svg", ".png", ".jpg", ".qm", ".qss"}
 INCLUDED_NAMES = {"LICENSE"}
 
 

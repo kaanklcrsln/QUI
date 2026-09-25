@@ -46,6 +46,11 @@ parçaya tıklayın, stilini değiştirin ve sonucu QGIS'e uygulayın. Tema okun
   - `.qss` stil sayfası olarak dışa aktarma.
   - İsterseniz korunan tema QGIS her açıldığında yeniden uygulanır.
 - **Diller:** Türkçe ve İngilizce.
+- **31 topluluk teması**, yazarlarına atıf yapılarak eklentiye dahil edildi. *Hazır
+  Temalar → Topluluk Temaları* menüsünden seçebilir ya da *Global* sekmesinde taban
+  tema olarak kullanıp üzerine kendi düzenlemelerinizi ekleyebilirsiniz. Kaynakları,
+  yazarları ve lisansları için [İngilizce README](README.md#community-themes)'ye
+  bakın.
 
 ## Kurulum
 
@@ -109,4 +114,8 @@ bildirimleriniz memnuniyetle karşılanır.
 
 ## Lisans
 
-GPL-2.0-or-later. Ayrıntılar için [LICENSE](LICENSE).
+QUI'nin kodu GPL-2.0-or-later lisanslıdır; ayrıntılar için [LICENSE](LICENSE).
+Eklentiyle birlikte gelen topluluk temaları kendi lisanslarını korur (ayrıntılar
+[README](README.md#community-themes)'de). Bu temaların bir kısmı GPL-3.0 olduğu için
+eklenti bütün olarak GPL-3.0 koşullarıyla dağıtılır; lisanstaki "or later" (veya
+sonraki sürümler) ibaresi buna izin verir.

@@ -17,13 +17,30 @@ KEPT_THEME_KEY = "qui/keptTheme"
 AUTO_APPLY_KEY = "qui/autoApplyOnStartup"
 
 
-def ui_theme_qss(name: str) -> str:
-    """Resolved QSS of the installed QGIS UI theme *name*; ``''`` for "default" or unknown.
+BUNDLED_THEMES_DIR = Path(__file__).resolve().parents[1] / "themes"
 
-    Uses the running QGIS's own theme path and UI scale, so the result is byte-identical
-    to what ``QgsApplication.setUITheme(name)`` applies.
+
+def bundled_theme_info() -> list[dict]:
+    """Third-party themes shipped with QUI (see tools/import_themes.py), with attribution."""
+    manifest = BUNDLED_THEMES_DIR / "themes.json"
+    return json.loads(manifest.read_text(encoding="utf-8")) if manifest.is_file() else []
+
+
+def ui_themes() -> dict[str, str]:
+    """Every usable base theme, name -> folder: QGIS's own themes, then QUI's bundled ones."""
+    themes = dict(QgsApplication.uiThemes())
+    for info in bundled_theme_info():
+        themes.setdefault(info["name"], str(BUNDLED_THEMES_DIR / info["id"]))
+    return themes
+
+
+def ui_theme_qss(name: str) -> str:
+    """Resolved QSS of the UI theme *name*; ``''`` for "default" or unknown.
+
+    Uses the running QGIS's own theme path and UI scale, so for QGIS's themes the result
+    is byte-identical to what ``QgsApplication.setUITheme(name)`` applies.
     """
-    path = QgsApplication.uiThemes().get(name, "")
+    path = ui_themes().get(name, "")
     style = Path(path, "style.qss") if path else None
     if style is None or not style.is_file():
         return ""
