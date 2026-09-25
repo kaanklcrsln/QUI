@@ -54,6 +54,14 @@ jobs:
           (folder / "ProbeAfter" / "style.qss").write_text("QWidget {}")
           after = "ProbeAfter" in QgsApplication.uiThemes()
           print(f"::notice title=uiThemes probe::folder={folder} created-before-first-call listed={before}; created-after listed={after}")
+          import shutil
+          builtin = Path(QgsApplication.uiThemes()["Blend of Gray"])
+          files = sorted(str(p.relative_to(builtin)) for p in builtin.rglob("*") if p.is_file() and "icons" not in p.parts)
+          shutil.copytree(builtin, folder / "ProbeCopy", dirs_exist_ok=True)
+          copied = "ProbeCopy" in QgsApplication.uiThemes()
+          doc = (QgsApplication.uiThemes.__doc__ or "").replace("\n", " ")[:300]
+          settings = QgsApplication.qgisSettingsDirPath()
+          print(f"::notice title=uiThemes probe 2::builtin files={files}; copy listed={copied}; settings dir={settings}; doc={doc}")
           EOF
       - name: Run tests
         shell: bash
