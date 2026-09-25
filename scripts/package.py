@@ -32,7 +32,9 @@ REQUIRED = (
     "name", "qgisMinimumVersion", "supportsQt6", "description", "about", "version", "author",
     "email", "repository", "tracker", "homepage", "tags", "category", "icon", "experimental", "changelog",
 )  # fmt: skip
-EXCLUDED_SUFFIXES = {".pyc", ".pyo", ".ts"}
+# Allow-list: anything else in qui/ (editor backups, design files...) stays out of the zip.
+INCLUDED_SUFFIXES = {".py", ".txt", ".json", ".svg", ".png", ".qm", ".qss"}
+INCLUDED_NAMES = {"LICENSE"}
 
 
 def read_metadata() -> configparser.SectionProxy:
@@ -60,7 +62,7 @@ def included(path: Path) -> bool:
     return (
         path.is_file()
         and not any(part.startswith(".") or part == "__pycache__" for part in parts)
-        and path.suffix not in EXCLUDED_SUFFIXES
+        and (path.suffix in INCLUDED_SUFFIXES or path.name in INCLUDED_NAMES)
     )
 
 
