@@ -6,6 +6,8 @@ project uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-09-25
+
 ### Added
 
 - 31 openly licensed community themes, bundled with attribution: QGIS Studio Themes,
@@ -38,5 +40,6 @@ project uses [Semantic Versioning](https://semver.org/).
   stylesheet and font. Optionally, the kept theme is re-applied at start-up.
 - English and Turkish user interface.
 
-[Unreleased]: https://github.com/kaanklcrsln/QUI/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/kaanklcrsln/QUI/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/kaanklcrsln/QUI/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/kaanklcrsln/QUI/releases/tag/v0.1.0

@@ -4,7 +4,7 @@
 parçaya tıklayın, stilini değiştirin ve sonucu QGIS'e uygulayın. Tema okunaksız
 çıkarsa QUI 15 saniye sonra kendiliğinden geri alır.
 
-[English](README.md) · [Değişiklikler](CHANGELOG.md) · [Katkı](CONTRIBUTING.md)
+[English](README.md) · [Değişiklikler](CHANGELOG.md) · [Sürümler](https://github.com/kaanklcrsln/QUI/releases)
 
 ![Glass Dark hazır temasıyla QUI editörü](docs/screenshots/editor-glass-dark.png)
 

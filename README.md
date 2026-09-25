@@ -4,7 +4,7 @@
 mockup, restyle it, and apply the result to QGIS. If a theme turns out unreadable,
 QUI reverts it automatically after 15 seconds.
 
-[Türkçe](README.tr.md) · [Changelog](CHANGELOG.md) · [Contributing](CONTRIBUTING.md) · [Architecture](docs/ARCHITECTURE.md)
+[Türkçe](README.tr.md) · [Changelog](CHANGELOG.md) · [Releases](https://github.com/kaanklcrsln/QUI/releases)
 
 ![QUI editor with the Glass Dark preset](docs/screenshots/editor-glass-dark.png)
 
@@ -83,9 +83,9 @@ and Install Plugins → Install from ZIP*.
 
 ## Community themes
 
-QUI bundles these openly licensed QGIS and Qt stylesheet themes, each converted
-into a regular QGIS theme folder (image paths rewritten) by
-[tools/import_themes.py](tools/import_themes.py). Every theme's source, author and
+QUI bundles these openly licensed QGIS and Qt stylesheet themes. Each one was imported
+from a pinned upstream commit and converted into a regular QGIS theme folder, with its
+image paths rewritten. Every theme's source, author and
 license is listed in [qui/themes/themes.json](qui/themes/themes.json). The license
 texts are in [qui/themes/licenses](qui/themes/licenses).
 
@@ -136,16 +136,15 @@ In the headless QGIS 4.2 test environment, QGIS lists no user themes at all, not
 a copy of a built-in one. Whether the desktop app lists them is not verified yet.
 Reports are welcome.
 
-## Development
+## Building from source
 
-- Windows helper: `scripts\dev.bat` runs commands inside the QGIS environment.
-- Tests: `scripts\dev.bat python -m pytest`
-- Lint: `ruff check .` and `ruff format .`
-- Live reload: `python scripts/dev_link.py` links `qui/` into your QGIS profile.
-  Use it with [Plugin Reloader](https://plugins.qgis.org/plugins/plugin_reloader/).
-- Release zip: `python scripts/package.py`
+- Release zip: `python scripts/package.py` writes `dist/qui-<version>.zip`. It needs only
+  Python.
+- Live reload: `python scripts/dev_link.py` links `qui/` into your QGIS profile. Use it
+  with [Plugin Reloader](https://plugins.qgis.org/plugins/plugin_reloader/).
+- Standalone editor (Windows): `scripts\dev.bat python scripts\run_standalone.py`
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for adding components, presets and translations.
+Bug reports and ideas are welcome in [Issues](https://github.com/kaanklcrsln/QUI/issues).
 
 ## License
 
